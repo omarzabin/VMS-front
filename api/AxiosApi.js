@@ -4,6 +4,7 @@ const axios = axiosConfiguration("/");
 
 export const authApi = {
   auth: async data => {
-    await axios.post(`/Authentication`, data);
-  }
+    await axios.get(`Authentication/test`, data);
+  },
+  withCredentials: false
 };

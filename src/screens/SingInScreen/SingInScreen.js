@@ -5,11 +5,11 @@ import {
   Image,
   useWindowDimensions
 } from "react-native";
-import CustomInput from "../Components/CustomInput";
+import CustomInput from "../../Components/CustomInput/CustomInput";
+import CustomButton from "../../Components/CustomButton/CustomButton";
 import { useState, useEffect } from "react";
-import CustomButton from "../Components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { authApi } from "../../api/AxiosApi";
+import { authApi } from "../../../api/AxiosConfig";
 
 export default function SignInScreen() {
   const { height } = useWindowDimensions();
@@ -36,7 +36,7 @@ export default function SignInScreen() {
       });
       console.log("res: ", res);
     } catch (error) {
-      console.log(error.message);
+      console.log(error.massage);
     }
   };
 
@@ -49,7 +49,7 @@ export default function SignInScreen() {
       <Image
         style={[styles.logo, { height: height * 0.3 }]}
         resizeMode="contain"
-        source={require("../../assets/logo.png")}
+        source={require("../../../assets/logo.png")}
       />
 
       <CustomInput
