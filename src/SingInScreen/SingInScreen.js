@@ -1,15 +1,15 @@
-import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import CustomInput from "../Components/CustomInput";
 import { useState, useEffect } from "react";
 import CustomButton from "../Components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import { authApi } from "../../api/AxiosApi";
 
 export default function SignInScreen() {
   const { height } = useWindowDimensions();
@@ -27,12 +27,29 @@ export default function SignInScreen() {
     navigation.navigate("SignUpScreen");
   }
 
+  const getData = async () => {
+    try {
+      console.log("first");
+      const res = await authApi.auth({
+        Email: "malnammas@gmail.com",
+        Password: "123"
+      });
+      console.log("res: ", res);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <View style={styles.root}>
       <Image
         style={[styles.logo, { height: height * 0.3 }]}
         resizeMode="contain"
-        source={require("../../../assets/logo.png")}
+        source={require("../../assets/logo.png")}
       />
 
       <CustomInput
@@ -70,13 +87,13 @@ const styles = StyleSheet.create({
   root: {
     alignItems: "center",
     padding: 20,
-    flex: 1,
+    flex: 1
   },
 
   logo: {
     width: "70%",
     maxHeight: 200,
     paddingBottom: 200,
-    maxWidth: 300,
-  },
+    maxWidth: 300
+  }
 });
