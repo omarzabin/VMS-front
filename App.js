@@ -22,7 +22,7 @@ import { DrawerContent } from "./src/screens/DrawerContent/DrawerContent";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  if (true) return <Navigation />;
+  if (false) return <Navigation />;
   else {
     return (
       <NavigationContainer>
