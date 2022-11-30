@@ -34,7 +34,7 @@ export default function SignInScreen() {
         Email: "malnammas@gmail.com",
         Password: "123"
       });
-      console.log("res: ", res);
+      console.log("res:", res);
     } catch (error) {
       console.log(error.massage);
     }

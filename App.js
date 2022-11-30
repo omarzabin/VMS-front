@@ -22,23 +22,24 @@ import { DrawerContent } from "./src/screens/DrawerContent/DrawerContent";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  //if (true) return <Navigation />;
-
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Vehicles" component={VehiclesScreen} />
-        <Drawer.Screen name="Alerts" component={AlertsScreen} />
-        <Drawer.Screen name="Records" component={RecordsScreen} />
-        <Drawer.Screen
-          name="Recommendations"
-          component={RecommendationsScreen}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+  if (true) return <Navigation />;
+  else {
+    return (
+      <NavigationContainer>
+        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+          <Drawer.Screen name="Home" component={HomeScreen} />
+          <Drawer.Screen name="Profile" component={ProfileScreen} />
+          <Drawer.Screen name="Vehicles" component={VehiclesScreen} />
+          <Drawer.Screen name="Alerts" component={AlertsScreen} />
+          <Drawer.Screen name="Records" component={RecordsScreen} />
+          <Drawer.Screen
+            name="Recommendations"
+            component={RecommendationsScreen}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
