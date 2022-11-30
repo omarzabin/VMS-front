@@ -22,7 +22,9 @@ import { DrawerContent } from "./src/screens/DrawerContent/DrawerContent";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  //if (true) return <Navigation />;
+  if(true) return <Navigation />;
+else{
+
 
   return (
     <NavigationContainer>
@@ -39,6 +41,7 @@ export default function App() {
       </Drawer.Navigator>
     </NavigationContainer>
   );
+}
 }
 
 const styles = StyleSheet.create({
