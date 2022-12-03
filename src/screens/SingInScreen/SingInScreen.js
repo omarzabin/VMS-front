@@ -10,6 +10,7 @@ import CustomButton from "../../Components/CustomButton/CustomButton";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { authApi } from "../../../api/AxiosApi";
+import axios from "axios";
 
 export default function SignInScreen() {
   const { height } = useWindowDimensions();
@@ -29,14 +30,15 @@ export default function SignInScreen() {
 
   const getData = async () => {
     try {
-      console.log("first");
-      /*const res = await authApi.auth({
-        Email: "",
-        Password: ""
+      /*console.log("first");
+      const res = await authApi.auth({
+        email: "omar@gmail.com",
+        password: "123"
       });*/
 
-      const res = await authApi.auth({});
+      const res = await authApi.auth();
       console.log("res:", res);
+      //await axios.get("https://192.168.1.4:7212/api/Authentication/test");
     } catch (error) {
       console.log("error", JSON.stringify(error));
     }
