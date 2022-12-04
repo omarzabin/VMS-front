@@ -30,13 +30,13 @@ export default function SignInScreen() {
 
   const getData = async () => {
     try {
-      /*console.log("first");
+      console.log("first");
       const res = await authApi.auth({
         email: "omar@gmail.com",
         password: "123"
-      });*/
+      });
 
-      const res = await authApi.auth();
+      // const res = await authApi.auth();
       console.log("res:", res);
       //await axios.get("https://192.168.1.4:7212/api/Authentication/test");
     } catch (error) {
