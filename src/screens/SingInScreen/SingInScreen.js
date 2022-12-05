@@ -7,25 +7,23 @@ import {
 } from "react-native";
 import CustomInput from "../../Components/CustomInput/CustomInput";
 import CustomButton from "../../Components/CustomButton/CustomButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { authApi } from "../../../api/AxiosApi";
 import axios from "axios";
 
-export default function SignInScreen() {
+import { AuthContext } from "../../context/AuthContext";
+
+export default function SignInScreen({ navigation }) {
+  const { signIn } = useContext(AuthContext);
+
   const { height } = useWindowDimensions();
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const navigation = useNavigation();
+  const navigationHome = useNavigation();
 
   function OnSignInPressed() {
-    navigation.navigate("HomeScreen");
-  }
-  function OnForgetPassword() {
-    navigation.navigate("ResetPassword");
-  }
-  function OnSignUpPressed() {
-    navigation.navigate("SignUpScreen");
+    navigationHome.navigate("HomeScreen", { screen: "HomeScreen" });
   }
 
   const getData = async () => {
@@ -36,7 +34,7 @@ export default function SignInScreen() {
         password: "123"
       });
 
-      // const res = await authApi.auth();
+      //const res = await authApi.auth();
       console.log("res:", res);
       //await axios.get("https://192.168.1.4:7212/api/Authentication/test");
     } catch (error) {
@@ -44,9 +42,9 @@ export default function SignInScreen() {
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   return (
     <View style={styles.root}>
@@ -70,17 +68,22 @@ export default function SignInScreen() {
         secureTextEntry={true}
       />
 
-      <CustomButton text="Sign In" onPress={OnSignInPressed} />
+      <CustomButton
+        text="Sign In"
+        onPress={() => {
+          signIn();
+        }}
+      />
 
       <CustomButton
         text="Forget Password ?"
-        onPress={OnForgetPassword}
+        onPress={() => navigation.push("ResetPassword")}
         type="Secondry"
       />
 
       <CustomButton
         text="Don't have an Account? Create one"
-        onPress={OnSignUpPressed}
+        onPress={() => navigation.push("SignUpScreen")}
         type="Secondry"
       />
     </View>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   Avatar,
@@ -12,8 +12,11 @@ import {
 } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { AuthContext } from "../../context/AuthContext";
 
 export function DrawerContent(props) {
+  const { singOut } = useContext(AuthContext);
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -88,6 +91,18 @@ export function DrawerContent(props) {
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
+      <View>
+        <Drawer.Section style={styles.drawerSection}>
+          <DrawerItem
+            icon={({ color, size }) =>
+              <Icon name="logout" color={color} size={size} />}
+            label="Sign Out"
+            onPress={() => {
+              singOut();
+            }}
+          />
+        </Drawer.Section>
+      </View>
     </View>
   );
 }

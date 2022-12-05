@@ -14,10 +14,10 @@ export default function ResetPassword() {
 
   function OnSignInPressed() {
     navigation.navigate("SignInScreen");
-    console.warn("Sign In");
+    //console.warn("Sign In");
   }
   function OnConfirmPressed() {
-    console.warn("Confirm");
+    //console.warn("Confirm");
   }
 
   const [ShouldShow, setshouldShow] = useState(false);
