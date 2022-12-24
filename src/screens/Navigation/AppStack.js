@@ -1,12 +1,8 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { DrawerContent } from "../DrawerContent/DrawerContent";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useState, useEffect, useMemo } from "react";
 import SignInScreen from "../SingInScreen/SingInScreen";
-import SignUpScreen from "../SignUpScreen/SingUpScreen";
-import ResetPassword from "../ResetPassword/ResetPassword";
 import { AuthContext } from "../../context/AuthContext";
 import HomeScreen from "../HomeScreen/HomeScreen";
 import ProfileScreen from "../Profile/ProfileScreen";
@@ -34,6 +30,7 @@ const AppStack = () => {
           name="Recommendations"
           component={RecommendationsScreen}
         />
+        <Drawer.Screen name="SignInScreen" component={SignInScreen} />
       </Drawer.Navigator>
     </AuthContext.Provider>
   );

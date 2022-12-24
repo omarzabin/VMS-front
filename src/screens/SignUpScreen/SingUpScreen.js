@@ -7,12 +7,12 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function SignUpScreen() {
+  const { signUp } = useContext(AuthContext);
   const [Email, setEmail] = useState("");
-  const [UserName, setUserName] = useState("");
+  const [FirstName, setFirstName] = useState("");
+  const [LastName, setLastName] = useState("");
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
-
-  const navigation = useNavigation();
 
   function OnSignInPressed() {
     //console.warn("Sign in");
@@ -36,9 +36,15 @@ export default function SignUpScreen() {
     <View style={styles.root}>
       {/* <Text style={styles.title}>Create an Account</Text> */}
       <CustomInput
-        placeholder="UserName"
-        value={UserName}
-        setValue={setUserName}
+        placeholder="FirstName"
+        value={FirstName}
+        setValue={setFirstName}
+        secureTextEntry={false}
+      />
+      <CustomInput
+        placeholder="LastName"
+        value={LastName}
+        setValue={setLastName}
         secureTextEntry={false}
       />
       <CustomInput
@@ -59,7 +65,13 @@ export default function SignUpScreen() {
         setValue={setConfirmPassword}
         secureTextEntry={true}
       />
-      <CustomButton text="Register" onPress={OnSignInPressed} type="" />
+      <CustomButton
+        text="Register"
+        onPress={() => {
+          signUp(FirstName, LastName, Email, Password);
+        }}
+        type=""
+      />
       <CustomButton
         text="Have an Account? Sign-In"
         onPress={OnSignInPressed}

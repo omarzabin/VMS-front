@@ -16,7 +16,6 @@ import { AuthContext } from "../../context/AuthContext";
 
 export function DrawerContent(props) {
   const { singOut } = useContext(AuthContext);
-
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
