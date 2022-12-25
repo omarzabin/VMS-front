@@ -6,18 +6,38 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
-import { AuthContext } from "../../context/AuthContext";
+
+import { useAtom } from "jotai";
+import { tokenAtom, isLoadingAtom } from "../../store/userStore";
 
 const AppNav = () => {
-  const { signUp, signOut, isLoading, userToken } = useContext(AuthContext);
-  if (isLoading) {
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ActivityIndicator size={"large"} />
+  const [token] = useAtom(tokenAtom);
+  const [isLoading] = useAtom(isLoadingAtom);
+
+  if (isLoading == true) {
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "black"
+      }}
+    >
+      <ActivityIndicator
+        size={"large"}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black"
+        }}
+      />
     </View>;
   }
+
   return (
     <NavigationContainer>
-      {userToken !== null ? <AppStack /> : <AuthStack />}
+      {token !== null ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

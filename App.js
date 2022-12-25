@@ -6,22 +6,15 @@ import {
   DrawerContentScrollView,
   DrawerItem
 } from "@react-navigation/drawer";
-import { AuthProvider } from "./src/context/AuthContext";
+import EStyleSheet from "react-native-extended-stylesheet";
 import AppNav from "./src/screens/Navigation/AppNav";
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <AppNav />
-    </AuthProvider>
-  );
+  return <AppNav style={{ backgroundColor: "#f1f3f5" }} />;
 }
 
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    backgroundColor: "#F9FBFC",
-    marginBottom: 200,
-    marginTop: 20
+EStyleSheet.build(
+  {
+    // always call EStyleSheet.build() even if you don't use global variables!
   }
-});
+);

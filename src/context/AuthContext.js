@@ -7,17 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
 
-  const getUserData = async (Email, Password) => {
-    try {
-      const res = await authApi.auth({
-        email: Email,
-        password: Password
-      });
-      console.log("res:", res.data.firstName);
-    } catch (error) {
-      console.log("error", JSON.stringify(error));
-    }
-  };
   const setUserData = async (FirstName, LastName, Email, Password) => {
     try {
       console.log("first");

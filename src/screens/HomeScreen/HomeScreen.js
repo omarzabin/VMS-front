@@ -5,6 +5,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { Linking, Platform } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function HomeScreen() {
   const [selected, setSelected] = useState("");
@@ -50,30 +51,99 @@ export default function HomeScreen() {
           placeholder="Select Vehicle"
         />
       </View>
+      <ScrollView style={{ maxHeight: 250 }}>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Engine status</Text>
+          </View>
 
-      <View style={styles.informationContainer}>
-        <View style={styles.leftContainer}>
-          <Text style={{ fontSize: 19 }}>Engine status</Text>
+          <View style={styles.rightContainer}>
+            <Icon name="circle" color={"red"} size={35} l />
+          </View>
         </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
 
-        <View style={styles.rightContainer}>
-          <Icon name="circle" color={"red"} size={35} l />
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.informationContainer}>
-        <View style={styles.leftContainer}>
-          <Text style={{ fontSize: 19 }}>Last Alert</Text>
-        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
 
-        <View style={styles.rightContainer}>
-          <Text style={{ fontSize: 19 }}> Alert</Text>
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
         </View>
-      </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={{ fontSize: 19 }}>Last Alert</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text style={{ fontSize: 19 }}> Alert</Text>
+          </View>
+        </View>
+      </ScrollView>
       <View style={styles.LocationContainer}>
-        <View>
-          <Text style={{ fontSize: 19 }}>Last Location for vehicle</Text>
-        </View>
-
         <View style={styles.mapContainer}>
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -97,9 +167,12 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    flex: 1
+    flex: 1,
+    marginTop: 10,
+    marginHorizontal: 8,
+    backgroundColor: "#f1f3f5"
   },
-  selectListContainer: { padding: 3 },
+  selectListContainer: { padding: 3, marginBottom: 15 },
   informationContainer: {
     flexDirection: "row",
     paddingHorizontal: 6,
@@ -115,12 +188,11 @@ const styles = StyleSheet.create({
   leftContainer: { paddingTop: 6 },
   rightContainer: { paddingRight: 10 },
   mapContainer: {
-    paddingTop: 10,
+    height: 400,
     shadowColor: "black",
-    shadowOffset: { width: 5, hight: 5 },
+    shadowOffset: { width: 1, hight: 1 },
     shadowOpacity: 0.5,
-    shadowRadius: 4,
-    alignItems: "center"
+    shadowRadius: 2
   },
   map: {
     width: "100%",

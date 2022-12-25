@@ -2,27 +2,57 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image } from "react-native";
 import CustomInput from "../../Components/CustomInput/CustomInput";
 import CustomButton from "../../Components/CustomButton/CustomButton";
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../context/AuthContext";
+import { useAtom } from "jotai";
+import { tokenAtom, isLoadingAtom } from "../../store/userStore";
+import { registerApi } from "../../../api/AxiosApi";
 
 export default function SignUpScreen() {
-  const { signUp } = useContext(AuthContext);
-  const [Email, setEmail] = useState("");
-  const [FirstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [Password, setPassword] = useState("");
-  const [ConfirmPassword, setConfirmPassword] = useState("");
+  const navigation = useNavigation();
 
-  function OnSignInPressed() {
-    //console.warn("Sign in");
+  const [Email, setEmail] = useState("a");
+  const [FirstName, setFirstName] = useState("a");
+  const [LastName, setLastName] = useState("a");
+  const [Password, setPassword] = useState("a");
+  const [ConfirmPassword, setConfirmPassword] = useState("a");
+
+  const [token, setToken] = useAtom(tokenAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+
+  const setUserData = async () => {
+    try {
+      const res = await registerApi.register({
+        firstName: FirstName,
+        lastName: LastName,
+        email: Email,
+        password: Password
+      });
+      setToken(null);
+      setIsLoading(false);
+
+      console.log("---------1---------");
+
+      console.log("token atom: ", token);
+      console.log("is loading atom: ", isLoading);
+      console.log("res:", res.data);
+    } catch (error) {
+      setToken(null);
+      setIsLoading(true);
+      console.log("---------2---------");
+
+      console.log("token atom: ", token);
+      console.log("is loading atom: ", isLoading);
+      console.log("error", JSON.stringify(error));
+    }
+  };
+
+  function SignUp() {
+    setUserData();
+    SignIn();
   }
 
-  function OnSignInPressed() {
-    //console.warn("Sign In");
-    navigation.navigate("SignInScreen");
-  }
-  function OnRegisterPressed() {
+  function SignIn() {
     navigation.navigate("SignInScreen");
   }
   function OnTermsOfUserPressed() {
@@ -34,7 +64,6 @@ export default function SignUpScreen() {
 
   return (
     <View style={styles.root}>
-      {/* <Text style={styles.title}>Create an Account</Text> */}
       <CustomInput
         placeholder="FirstName"
         value={FirstName}
@@ -65,16 +94,10 @@ export default function SignUpScreen() {
         setValue={setConfirmPassword}
         secureTextEntry={true}
       />
-      <CustomButton
-        text="Register"
-        onPress={() => {
-          signUp(FirstName, LastName, Email, Password);
-        }}
-        type=""
-      />
+      <CustomButton text="Register" onPress={SignUp} type="" />
       <CustomButton
         text="Have an Account? Sign-In"
-        onPress={OnSignInPressed}
+        onPress={SignIn}
         type="Secondry"
       />
       <Text style={styles.policytext}>
@@ -99,11 +122,11 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 14,
     fontWeight: "bold",
     color: "051C60",
-    margin: 10,
-    paddingTop: 40
+    margin: 5,
+    paddingTop: 20
   },
   policytext: {
     color: "gray",

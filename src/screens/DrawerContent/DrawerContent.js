@@ -12,10 +12,18 @@ import {
 } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { AuthContext } from "../../context/AuthContext";
+import { useAtom } from "jotai";
+import { tokenAtom, isLoadingAtom } from "../../store/userStore";
 
 export function DrawerContent(props) {
-  const { singOut } = useContext(AuthContext);
+  const [token, setToken] = useAtom(tokenAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+
+  function SignOut() {
+    setToken(null);
+    setIsLoading(false);
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -96,9 +104,7 @@ export function DrawerContent(props) {
             icon={({ color, size }) =>
               <Icon name="logout" color={color} size={size} />}
             label="Sign Out"
-            onPress={() => {
-              singOut();
-            }}
+            onPress={SignOut}
           />
         </Drawer.Section>
       </View>

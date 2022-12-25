@@ -1,86 +1,50 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  useWindowDimensions,
-  TouchableOpacity,
-  KeyboardAvoidingView
-} from "react-native";
+import { StyleSheet, View, Image, useWindowDimensions } from "react-native";
 import CustomInput from "../../Components/CustomInput/CustomInput";
 import CustomButton from "../../Components/CustomButton/CustomButton";
-import { useState, useEffect, useContext } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { authApi } from "../../../api/AxiosApi";
-import axios from "axios";
 
-import { AuthContext } from "../../context/AuthContext";
-import { TextInput } from "react-native-paper";
-import { ScrollView } from "react-native-gesture-handler";
 import { useAtom } from "jotai";
-import { testAtom, userAtom } from "../../store/userStore";
+import { tokenAtom, isLoadingAtom } from "../../store/userStore";
 
 export default function SignInScreen({ navigation }) {
-  //TESTING AXIOS
-  /*const getDataUsingAsyncAwaitGetCall = async () => {
-    try {
-      const response = await axios.get(
-        "http://1https://localhost:49159//api/authentication/test/"
-      );
-      alert(JSON.stringify(response.data));
-    } catch (error) {
-      // handle error
-      alert(error.message);
-    }
-  };*/
-
-  const { signIn } = useContext(AuthContext);
-
   const { height } = useWindowDimensions();
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const [checkValidEmail, setCheckValidEmail] = useState(false);
-  //const navigationHome = useNavigation();
 
   //using atom
-  const [user, setUser] = useAtom(userAtom);
-  const [derived, set] = useAtom(testAtom);
+  const [token, setToken] = useAtom(tokenAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
-  const handleCheckEmail = text => {
-    let re = /\S+@\S+\.\S+/;
-    let regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  const getUserData = async (Email, Password) => {
+    try {
+      const res = await authApi.auth({
+        email: Email,
+        password: Password
+      });
 
-    setEmail(text);
-    if (re.test(text) || regex.test(text)) {
-      setCheckValidEmail(false);
-    } else {
-      setCheckValidEmail(true);
+      setToken("token");
+      setIsLoading(false);
+
+      console.log("---------1---------");
+
+      console.log("token atom: ", token);
+      console.log("is loading atom: ", isLoading);
+      console.log("res:", res.data);
+    } catch (error) {
+      setToken(null);
+      setIsLoading(true);
+      console.log("---------2---------");
+      console.warn("Email or Password are Unvalued");
+      console.log("token atom: ", token);
+      console.log("is loading atom: ", isLoading);
+      console.log("error", JSON.stringify(error));
     }
   };
 
-  console.log("atom1: ", user);
-  console.log("atom2: ", derived);
-  set(1234);
-  console.log("atom3: ", derived);
-
-  // const getData = async () => {
-  //   try {
-  //     console.log("first");
-  //     const res = await authApi.auth({
-  //       email: Email,
-  //       password: Password
-  //     });
-
-  //     console.log("res:", res.data.firsName);
-  //     // if(res.request =="401" || res.request=="404")
-  //     // {
-
-  //     // }
-  //   } catch (error) {
-  //     console.log("error", JSON.stringify(error));
-  //     console.log(error);
-  //   }
-  // };
+  function SignIn() {
+    getUserData(Email, Password);
+  }
 
   return (
     <View style={styles.root}>
@@ -95,17 +59,10 @@ export default function SignInScreen({ navigation }) {
         <View>
           <CustomInput
             placeholder="Email"
-            value={user}
+            value={Email}
             setValue={setEmail}
             secureTextEntry={false}
-            // onChangeText={text => {
-            //   handleCheckEmail(text);
-            // }}
           />
-
-          {checkValidEmail
-            ? <Text style={styles.textFailed}>Wrong formatted email</Text>
-            : <Text style={styles.textFailed}> </Text>}
         </View>
 
         <View>
@@ -118,12 +75,7 @@ export default function SignInScreen({ navigation }) {
         </View>
 
         <View>
-          <CustomButton
-            text="Sign In"
-            onPress={() => {
-              signIn(Email, Password);
-            }}
-          />
+          <CustomButton text="Sign In" onPress={SignIn} />
 
           <CustomButton
             text="Forget Password ?"
@@ -138,13 +90,6 @@ export default function SignInScreen({ navigation }) {
           />
         </View>
       </View>
-
-      {/* <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={getDataUsingAsyncAwaitGetCall}
-      >
-        <Text>Get Data Using Async Await GET</Text>
-      </TouchableOpacity> */}
     </View>
   );
 }
