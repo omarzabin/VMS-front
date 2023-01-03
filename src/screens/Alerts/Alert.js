@@ -1,46 +1,89 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
-
-export default function Alert({ temp, long }) {
+import { useNavigation } from "@react-navigation/native";
+import { useAtom } from "jotai";
+import { alertLocationAtom } from "../../store/userStore";
+export default function Alert({
+  time,
+  temp,
+  long,
+  lat,
+  speed,
+  vehicleIGN,
+  addressAr,
+  pNumber
+}) {
+  const navigation = useNavigation();
+  const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
   return (
     <View style={styles.root}>
-      <View style={styles.body}>
-        <View style={styles.headerWrapper}>
-          <Text style={styles.headerText}>Vehicle Number</Text>
-          <Text style={styles.address}>37-26283</Text>
-        </View>
-        <View style={styles.dataContainer}>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Temp:</Text>
-            <Text>
-              {temp}
+      <TouchableOpacity
+        onPress={() => {
+          setMarkerLocation({ long: long, lat: lat });
+          navigation.navigate("Home");
+        }}
+      >
+        <View style={styles.body}>
+          <View style={{ alignItems: "flex-end" }}>
+            <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }}>
+              {time}
             </Text>
           </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Long:</Text>
-            <Text>
-              {long}
+          <View style={styles.dataContainer}>
+            <Text style={styles.headerText}>Plate Number</Text>
+            <Text style={styles.address}>
+              {pNumber}
             </Text>
           </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>lat:</Text>
-            <Text>12343</Text>
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Alert:</Text>
-            <Text>high temp</Text>
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Temp:</Text>
-            <Text>100</Text>
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Temp:</Text>
-            <Text>100</Text>
+
+          <View>
+            <View style={styles.headerWrapper}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>Alert</Text>
+              <Text>high temp</Text>
+            </View>
+            <View style={{ flexDirection: "row", marginBottom: 5 }}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>Temp:</Text>
+              <Text>
+                {temp}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", marginBottom: 5 }}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>Long:</Text>
+              <Text>
+                {long.toFixed(5)}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", marginBottom: 5 }}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>Lat:</Text>
+              <Text>
+                {lat.toFixed(5)}
+              </Text>
+            </View>
+
+            <View style={{ flexDirection: "row", marginBottom: 5 }}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>Speed:</Text>
+              <Text>
+                {speed}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", marginBottom: 5 }}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                VehicleIGN:
+              </Text>
+              {vehicleIGN ? <Text> On </Text> : <Text> Off</Text>}
+            </View>
+            <View style={{ flexDirection: "column", marginBottom: 5 }}>
+              <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                AddressAr:
+              </Text>
+              <Text>
+                {addressAr}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -57,19 +100,22 @@ const styles = EStyleSheet.create({
   },
   body: {},
   headerText: {
-    fontWeight: "900",
-    fontSize: 22,
-    color: "black"
+    fontWeight: "700",
+    fontSize: 20.5,
+    color: "black",
+    marginRight: 10
   },
   address: {
     color: "#525252",
-    fontSize: 16
+    fontSize: 17,
+    marginTop: 3
   },
   dataContainer: {
     flexDirection: "column"
   },
 
   headerWrapper: {
-    marginBottom: 10
+    marginTop: 10,
+    flexDirection: "row"
   }
 });

@@ -1,16 +1,53 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItem
-} from "@react-navigation/drawer";
+import { View, Text, ActivityIndicator } from "react-native";
+import React, { useContext } from "react";
+
+import { NavigationContainer } from "@react-navigation/native";
+
 import EStyleSheet from "react-native-extended-stylesheet";
-import AppNav from "./src/screens/Navigation/AppNav";
+
+import { useAtom } from "jotai";
+import {
+  tokenAtom,
+  isLoadingAtom,
+  firstTimeAtom
+} from "../VMSFront/src/store/userStore";
+import AuthStack from "./src/screens/Navigation/AuthStack";
+import AppStack from "./src/screens/Navigation/AppStack";
+import FirstTimeStack from "./src/screens/Navigation/FirstTimeStack";
 
 export default function App() {
-  return <AppNav style={{ backgroundColor: "#f1f3f5" }} />;
+  const [token] = useAtom(tokenAtom);
+  const [firstTime] = useAtom(firstTimeAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        <ActivityIndicator
+          size={"large"}
+          style={{
+            flex: 1
+          }}
+        />
+        {setIsLoading(false)}
+      </View>
+    );
+  } else {
+  }
+  return (
+    <NavigationContainer>
+      {token !== null && firstTime
+        ? <FirstTimeStack />
+        : token !== null && !firstTime ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
 }
 
 EStyleSheet.build(

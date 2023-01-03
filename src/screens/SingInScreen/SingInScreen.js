@@ -16,7 +16,7 @@ export default function SignInScreen({ navigation }) {
   const [token, setToken] = useAtom(tokenAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
-  const getUserData = async (Email, Password) => {
+  const getUserData = async () => {
     try {
       const res = await authApi.auth({
         email: Email,
@@ -24,7 +24,7 @@ export default function SignInScreen({ navigation }) {
       });
 
       setToken("token");
-      setIsLoading(false);
+      setIsLoading(true);
 
       console.log("---------1---------");
 
@@ -43,7 +43,7 @@ export default function SignInScreen({ navigation }) {
   };
 
   function SignIn() {
-    getUserData(Email, Password);
+    getUserData();
   }
 
   return (

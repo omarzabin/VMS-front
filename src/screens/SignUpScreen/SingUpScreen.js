@@ -5,19 +5,20 @@ import CustomButton from "../../Components/CustomButton/CustomButton";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
-import { tokenAtom, isLoadingAtom } from "../../store/userStore";
+import { tokenAtom, isLoadingAtom, firstTimeAtom } from "../../store/userStore";
 import { registerApi } from "../../../api/AxiosApi";
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
 
-  const [Email, setEmail] = useState("a");
-  const [FirstName, setFirstName] = useState("a");
-  const [LastName, setLastName] = useState("a");
-  const [Password, setPassword] = useState("a");
-  const [ConfirmPassword, setConfirmPassword] = useState("a");
+  const [Email, setEmail] = useState();
+  const [FirstName, setFirstName] = useState();
+  const [LastName, setLastName] = useState();
+  const [Password, setPassword] = useState();
+  const [ConfirmPassword, setConfirmPassword] = useState();
 
   const [token, setToken] = useAtom(tokenAtom);
+  const [firstTime, setFirstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
   const setUserData = async () => {
@@ -28,20 +29,23 @@ export default function SignUpScreen() {
         email: Email,
         password: Password
       });
-      setToken(null);
-      setIsLoading(false);
+      setToken("token");
+      setIsLoading(true);
+      setFirstTime(true);
 
       console.log("---------1---------");
 
       console.log("token atom: ", token);
+      console.log("FirstTime atom: ", firstTime);
       console.log("is loading atom: ", isLoading);
       console.log("res:", res.data);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
+      setFirstTime(false);
       console.log("---------2---------");
-
       console.log("token atom: ", token);
+      console.log("FirstTime atom: ", firstTime);
       console.log("is loading atom: ", isLoading);
       console.log("error", JSON.stringify(error));
     }
@@ -49,7 +53,6 @@ export default function SignUpScreen() {
 
   function SignUp() {
     setUserData();
-    SignIn();
   }
 
   function SignIn() {

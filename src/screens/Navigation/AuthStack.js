@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import SignInScreen from "../SingInScreen/SingInScreen";
 import SignUpScreen from "../SignUpScreen/SingUpScreen";
 import ResetPassword from "../ResetPassword/ResetPassword";
+import AddNewVehiclesScreen from "../Vehicles/AddNewVehicleScreen";
 
 const stack = createNativeStackNavigator();
 
@@ -19,6 +20,11 @@ export const AuthStack = () => {
       <stack.Screen
         name="SignUpScreen"
         component={SignUpScreen}
+        options={{ title: "Create Account" }}
+      />
+      <stack.Screen
+        name="AddNewVehicle"
+        component={AddNewVehiclesScreen}
         options={{ title: "Create Account" }}
       />
       <stack.Screen

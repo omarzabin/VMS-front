@@ -1,44 +1,18 @@
 import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import Icon from "react-native-vector-icons/FontAwesome";
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { Linking, Platform } from "react-native";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { ScrollView } from "react-native-gesture-handler";
-
+import { useAtom } from "jotai";
+import { alertLocationAtom } from "../../store/userStore";
 export default function HomeScreen() {
+  const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
+
   const [selected, setSelected] = useState("");
   const [iconColor, setIconColor] = useState("red");
 
   const data = [{ key: "1", value: "Camry" }, { key: "2", value: "Accord" }];
-  /* 
-  const { width, hight } = Dimensions.get("window");
-  const Aspect_RATIO = width / hight;
-  const LATITUDE_DELTA = 0.02;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * Aspect_RATIO;
-  const INITIAL_POSITION = {
-    latitude: 40.76711,
-    longitude: -73.979704,
-    latDelta: LATITUDE_DELTA,
-    longDelta: LONGITUDE_DELTA
-  };*/
-
-  /* const openMap = async (latitude, longitude, label = "MyLabel") => {
-    const tag = `${Platform.OS === "ios" ? "maps" : "geo"}:0,0?q=`;
-    const link = Platform.select({
-      ios: `${scheme}${label}@${latitude},${longitude}`,
-      android: `${scheme}${latitude},${longitude}(${label})`
-    });
-
-    try {
-      const supported = await Linking.canOpenURL(link);
-
-      if (supported) Linking.openURL(link);
-    } catch (error) {
-      console.log(error);
-    }
-  };*/
 
   return (
     <View style={styles.outerContainer}>
@@ -151,13 +125,22 @@ export default function HomeScreen() {
               styles.map // remove if not using Google Maps
             }
             region={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121
+              latitude: 31.963158,
+              longitude: 35.930359,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.421
+            }}
+            zoomControlEnabled
+            onMapLoaded={() => {
+              console.log("first");
             }}
           >
-            <Marker coordinate={{ latitude: 37.78825, longitude: -122.4324 }} />
+            <Marker
+              coordinate={{
+                latitude: markerLocation.lat,
+                longitude: markerLocation.long
+              }}
+            />
           </MapView>
         </View>
       </View>

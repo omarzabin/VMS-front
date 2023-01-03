@@ -2,6 +2,8 @@ import { atom } from "jotai";
 
 export const isLoadingAtom = atom(true);
 export const tokenAtom = atom(null);
+export const firstTimeAtom = atom(false);
+export const alertLocationAtom = atom({ long: 0, lat: 0 });
 
 export const userAtom = atom(10);
 export const vehicleOwner = atom();

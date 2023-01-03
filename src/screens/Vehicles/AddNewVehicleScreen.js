@@ -1,23 +1,19 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import { Button, TextInput } from "react-native-paper";
 import CustomInput from "../../Components/CustomInput/CustomInput";
 import { ScrollView } from "react-native-gesture-handler";
 import { SelectList } from "react-native-dropdown-select-list";
+import { useNavigation } from "@react-navigation/native";
+import { firstTimeAtom } from "../../store/userStore";
+import { useAtom } from "jotai";
 
 export default function AddNewVehiclesScreen() {
-  //   if (true) {
-  //     return (
-  //       <View>
-  //         <CustomButton text="Add Vehicle" onPress={() => {}} />
-  //       </View>
-  //     );
-  //   }
-  const [VehicleAutomaker, selectVehicleAutomaker] = useState("mer");
-  const [VehicleModel, selectVehicleModel] = useState("");
+  const navigation = useNavigation("");
+  const [firstTime, setFirstTime] = useAtom(firstTimeAtom);
 
-  const automakers = [
+  const [VehicleAutomakerOptions] = useState([
     { key: "mer", value: "Mercedes Benz" },
     { key: "bmw", value: "BMW" },
     { key: "vol", value: "Volkswagen" },
@@ -28,21 +24,48 @@ export default function AddNewVehiclesScreen() {
     { key: "for", value: "Ford" },
     { key: "hyu", value: "Hyundai" },
     { key: "kia", value: "Kia" }
-  ];
+  ]);
+  const [selectedVehicleAutomaker, setSelectedVehicleAutomaker] = useState("");
+  const [VehicleModel, selectVehicleModel] = useState("");
+  const [modelOptions, setModelOptions] = useState([]);
 
-  // const models = {
-  //   mer: [
-  //     { key: "cClass", value: "Mercedes Benz C-Class" },
-  //     { key: "eClass", value: "Mercedes Benz E-Class" },
-  //     { key: "sClass", value: "Mercedes Benz S-Class" },
-  //     { key: "gClass", value: "Mercedes Benz G-Class" }
-  //   ],
-  //   bmw: [
-  //     { key: "3Ser", value: "BMW 3-Series" },
-  //     { key: "4Ser", value: "BMW 4-Series" },
-  //     { key: "5Ser", value: "BMW 5-Series" }
-  //   ]
-  // };
+  useEffect(
+    () => {
+      const filteredModels = models[selectedVehicleAutomaker];
+      setModelOptions(filteredModels);
+    },
+    [selectedVehicleAutomaker]
+  );
+  const setVehicle = async () => {
+    try {
+      const res = await registerApi.register({
+        firstName: FirstName,
+        lastName: LastName,
+        email: Email,
+        password: Password
+      });
+      setFirstTime(false);
+      console.log("---------1---------");
+      console.log("token atom: ", token);
+      console.log("FirstTime atom: ", firstTime);
+      console.log("is loading atom: ", isLoading);
+      console.log("res:", res.data);
+    } catch (error) {
+      setToken(null);
+      setIsLoading(true);
+      setFirstTime(false);
+      console.log("---------2---------");
+      console.log("token atom: ", token);
+      console.log("FirstTime atom: ", firstTime);
+      console.log("is loading atom: ", isLoading);
+      console.log("error", JSON.stringify(error));
+    }
+  };
+
+  function nav() {
+    // setVehicle();
+    setFirstTime(false);
+  }
 
   const models = {
     mer: [
@@ -61,25 +84,34 @@ export default function AddNewVehiclesScreen() {
   if (true)
     return (
       <ScrollView style={{ backgroundColor: "white" }}>
+        <Text
+          style={{
+            fontSize: 18,
+            color: "#808080",
+            alignSelf: "center",
+            margin: 7
+          }}
+        >
+          Fill All needed information's below
+        </Text>
         <View>
-          <Text style={styles.mainText}>Vehicle Information</Text>
+          <Text style={styles.mainText}>Vehicle</Text>
           <View style={styles.outerContends}>
             <View style={styles.innerContends}>
               <Text>Vehicle Automaker</Text>
               <SelectList
-                setSelected={selectVehicleAutomaker}
-                data={automakers}
+                setSelected={setSelectedVehicleAutomaker}
+                data={VehicleAutomakerOptions}
                 placeholder={"Select Automaker"}
-                defaultOption={{ key: "mer", value: "Mercedes Benz" }}
               />
             </View>
             <View style={styles.innerContends}>
               <Text>Vehicle Model</Text>
               <SelectList
                 setSelected={selectVehicleModel}
-                data={models[automakers]}
+                data={modelOptions || []}
                 placeholder={"Select Model"}
-                defaultOption={models[automakers[0]]}
+                defaultOption={[]}
               />
             </View>
             <View style={styles.innerContends}>
@@ -95,7 +127,7 @@ export default function AddNewVehiclesScreen() {
               <CustomInput />
             </View>
           </View>
-          <Text style={styles.mainText}>Registration Information</Text>
+          <Text style={styles.mainText}>Vehicle Registration</Text>
           <View style={styles.outerContends}>
             <View>
               <Text>Vehicle Classification</Text>
@@ -106,7 +138,7 @@ export default function AddNewVehiclesScreen() {
               <CustomInput />
             </View>
           </View>
-          <Text style={styles.mainText}>Insurance Information</Text>
+          <Text style={styles.mainText}>Vehicle Insurance</Text>
           <View style={styles.outerContends}>
             <View>
               <Text>Insurance Type</Text>
@@ -117,8 +149,8 @@ export default function AddNewVehiclesScreen() {
               <CustomInput />
             </View>
           </View>
-          <View>
-            <CustomButton text="Add Vehicle" />
+          <View style={{ justifyContent: "center", paddingHorizontal: 60 }}>
+            <CustomButton text="Add Vehicle" onPress={nav} />
           </View>
         </View>
       </ScrollView>
@@ -128,16 +160,20 @@ export default function AddNewVehiclesScreen() {
 const styles = StyleSheet.create({
   mainText: {
     textAlign: "center",
-    backgroundColor: "#F9FBFC",
-    marginTop: 10,
-    paddingVertical: 5,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "snow",
-    borderStyle: "dashed",
+    marginTop: 0.5,
+    paddingVertical: 3,
+    borderWidth: 0.5,
+    borderRadius: 800,
+    backgroundColor: "#E0E0E0",
+
     fontSize: 18,
     fontWeight: "bold"
   },
-  outerContends: { margin: 6, padding: 6 },
+  outerContends: {
+    margin: 6,
+    padding: 1,
+    borderWidth: 0.9,
+    borderColor: "#F8F8F8"
+  },
   innerContends: { paddingVertical: 10 }
 });
