@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import { Button, TextInput } from "react-native-paper";
@@ -8,6 +8,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { useNavigation } from "@react-navigation/native";
 import { firstTimeAtom } from "../../store/userStore";
 import { useAtom } from "jotai";
+import CustomDatePicker from "../../Components/CustomDatePicker/CustomDatePicker";
 
 export default function AddNewVehiclesScreen() {
   const navigation = useNavigation("");
@@ -38,28 +39,7 @@ export default function AddNewVehiclesScreen() {
   );
   const setVehicle = async () => {
     try {
-      const res = await registerApi.register({
-        firstName: FirstName,
-        lastName: LastName,
-        email: Email,
-        password: Password
-      });
-      setFirstTime(false);
-      console.log("---------1---------");
-      console.log("token atom: ", token);
-      console.log("FirstTime atom: ", firstTime);
-      console.log("is loading atom: ", isLoading);
-      console.log("res:", res.data);
-    } catch (error) {
-      setToken(null);
-      setIsLoading(true);
-      setFirstTime(false);
-      console.log("---------2---------");
-      console.log("token atom: ", token);
-      console.log("FirstTime atom: ", firstTime);
-      console.log("is loading atom: ", isLoading);
-      console.log("error", JSON.stringify(error));
-    }
+    } catch (error) {}
   };
 
   function nav() {
@@ -78,7 +58,8 @@ export default function AddNewVehiclesScreen() {
       { key: "5", value: "BMW 3-Series" },
       { key: "6", value: "BMW 4-Series" },
       { key: "7", value: "BMW 5-Series" }
-    ]
+    ],
+    toy: [{ key: "8", value: "Camry" }]
   };
 
   if (true)
@@ -96,17 +77,17 @@ export default function AddNewVehiclesScreen() {
         </Text>
         <View>
           <Text style={styles.mainText}>Vehicle</Text>
-          <View style={styles.outerContends}>
-            <View style={styles.innerContends}>
-              <Text>Vehicle Automaker</Text>
+          <View style={styles.outerContainer}>
+            <View style={styles.innerContainer}>
+              <Text style={styles.headerText}>Vehicle Automaker</Text>
               <SelectList
                 setSelected={setSelectedVehicleAutomaker}
                 data={VehicleAutomakerOptions}
                 placeholder={"Select Automaker"}
               />
             </View>
-            <View style={styles.innerContends}>
-              <Text>Vehicle Model</Text>
+            <View style={styles.innerContainer}>
+              <Text style={styles.headerText}>Vehicle Model</Text>
               <SelectList
                 setSelected={selectVehicleModel}
                 data={modelOptions || []}
@@ -114,39 +95,39 @@ export default function AddNewVehiclesScreen() {
                 defaultOption={[]}
               />
             </View>
-            <View style={styles.innerContends}>
-              <Text>Vehicle Manufacture Year</Text>
+            <View style={styles.innerContainer}>
+              <Text style={styles.headerText}>Vehicle Manufacture Year</Text>
               <CustomInput />
             </View>
-            <View style={styles.innerContends}>
-              <Text>Vehicle Plate Number</Text>
+            <View style={styles.innerContainer}>
+              <Text style={styles.headerText}>Vehicle Plate Number</Text>
               <CustomInput />
             </View>
-            <View style={styles.innerContends}>
-              <Text>Vehicle Color</Text>
+            <View style={styles.innerContainer}>
+              <Text style={styles.headerText}>Vehicle Color</Text>
               <CustomInput />
             </View>
           </View>
           <Text style={styles.mainText}>Vehicle Registration</Text>
-          <View style={styles.outerContends}>
+          <View style={styles.outerContainer}>
             <View>
-              <Text>Vehicle Classification</Text>
+              <Text style={styles.headerText}>Vehicle Classification</Text>
               <CustomInput />
             </View>
             <View>
               <Text>Expiry Date</Text>
-              <CustomInput />
+              <CustomDatePicker />
             </View>
           </View>
           <Text style={styles.mainText}>Vehicle Insurance</Text>
-          <View style={styles.outerContends}>
+          <View style={styles.outerContainer}>
             <View>
-              <Text>Insurance Type</Text>
+              <Text style={styles.headerText}>Insurance Type</Text>
               <CustomInput />
             </View>
             <View>
-              <Text>Expiry Date</Text>
-              <CustomInput />
+              <Text style={styles.headerText}>Expiry Date</Text>
+              <CustomDatePicker />
             </View>
           </View>
           <View style={{ justifyContent: "center", paddingHorizontal: 60 }}>
@@ -162,18 +143,29 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 0.5,
     paddingVertical: 3,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderRadius: 800,
     backgroundColor: "#E0E0E0",
 
     fontSize: 18,
     fontWeight: "bold"
   },
-  outerContends: {
+  outerContainer: {
     margin: 6,
     padding: 1,
-    borderWidth: 0.9,
+    borderWidth: 2,
     borderColor: "#F8F8F8"
   },
-  innerContends: { paddingVertical: 10 }
+  innerContainer: {
+    margin: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderWidth: 0.5,
+    borderColor: "red",
+    borderRadius: 10
+  },
+  headerText: {
+    color: "red",
+    marginHorizontal: 5
+  }
 });

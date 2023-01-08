@@ -5,7 +5,8 @@ export default function CustomInput({
   value,
   setValue,
   placeholder,
-  secureTextEntry
+  secureTextEntry,
+  onFocus
 }) {
   return (
     <View style={styles.container}>
@@ -15,6 +16,7 @@ export default function CustomInput({
         onChangeText={text => setValue(text)}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
+        onFocus={onFocus}
       />
     </View>
   );

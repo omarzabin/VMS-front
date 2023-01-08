@@ -1,11 +1,17 @@
 {
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "VMSTest": {
+      "android": {
+        "buildType": "apk"
+      }
     },
-    "preview": {
-      "distribution": "internal"
+    "VMSTest2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "VMSTest3": {
+      "developmentClient": true
     },
     "production": {}
   }

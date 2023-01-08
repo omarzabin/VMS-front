@@ -131,9 +131,6 @@ export default function HomeScreen() {
               longitudeDelta: 0.421
             }}
             zoomControlEnabled
-            onMapLoaded={() => {
-              console.log("first");
-            }}
           >
             <Marker
               coordinate={{
