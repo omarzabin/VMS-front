@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-
 export default function App({ onPress, text, type }) {
   return (
     <Pressable
@@ -13,7 +12,6 @@ export default function App({ onPress, text, type }) {
     </Pressable>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#3B71F3",
@@ -23,12 +21,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5
   },
-
   text: {
     fontWeight: "bold",
     color: "white"
   },
-
   container_Primary: {
     backgroundColor: "#3B71F3" /**For the primry button main buttons */
   },
@@ -43,5 +39,37 @@ const styles = StyleSheet.create({
   },
   text_Third: {
     color: "gray"
+  },
+  container_userChangepass: {
+    backgroundColor: "white",
+    width: 200,
+    height: 50,
+    borderRadius: 50,
+    marginHorizontal: "15%"
+  },
+  text_userChangepass: {
+    color: "black",
+    fontSize: 12,
+    fontWeight: "600"
+  },
+  container_submit: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 50
+  },
+  text_submit: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "bold"
+  },
+  container_clear: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 50
+  },
+  text_clear: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "bold"
   }
 });
