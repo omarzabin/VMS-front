@@ -6,7 +6,8 @@ export const firstTimeAtom = atom(false);
 export const alertLocationAtom = atom({ long: 0, lat: 0 });
 
 export const userAtom = atom(10);
-export const vehicleOwner = atom();
+export const vehicleOwnerAtom = atom();
+export const vehicleOwnerId = atom();
 
 export const testAtom = atom(
   get => test(get(userAtom)),

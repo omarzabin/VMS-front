@@ -1,44 +1,60 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image } from "react-native";
-import CustomInput from "../../Components/CustomInput/CustomInput";
-import CustomButton from "../../Components/CustomButton/CustomButton";
+import SpatialInput from "../../Components/SpatialInput/SpatialInput";
+import SpatialButton from "../../Components/CustomButton/CustomButton";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
-import { tokenAtom, isLoadingAtom, firstTimeAtom } from "../../store/userStore";
+import {
+  tokenAtom,
+  isLoadingAtom,
+  firstTimeAtom,
+  vehicleOwnerId
+} from "../../store/userStore";
 import { registerApi } from "../../../api/AxiosApi";
+import { useForm } from "react-hook-form";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SignUpScreen() {
+  const { control, handleSubmit, watch } = useForm();
+  const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const Name_valid = /^[a-zA-Z]+(([',][a-zA-Z ])?[a-zA-Z]*)*$/;
+  const passwd_confirm = watch("Password");
+
   const navigation = useNavigation();
 
-  const [Email, setEmail] = useState();
-  const [FirstName, setFirstName] = useState();
-  const [LastName, setLastName] = useState();
-  const [Password, setPassword] = useState();
-  const [ConfirmPassword, setConfirmPassword] = useState();
+  // const [Email, setEmail] = useState();
+  // const [FirstName, setFirstName] = useState();
+  // const [LastName, setLastName] = useState();
+  // const [Password, setPassword] = useState();
+  // const [ConfirmPassword, setConfirmPassword] = useState();
 
   const [token, setToken] = useAtom(tokenAtom);
   const [firstTime, setFirstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+  const [id, setId] = useAtom(vehicleOwnerId);
 
-  const setUserData = async () => {
+  const signUp = async data => {
     try {
       const res = await registerApi.register({
-        firstName: FirstName,
-        lastName: LastName,
-        email: Email,
-        password: Password
+        firstName: data.FirstName,
+        lastName: data.LastName,
+        email: data.Email,
+        password: data.Password
       });
       setToken("token");
       setIsLoading(true);
       setFirstTime(true);
+      setId(res.data);
 
       console.log("---------1---------");
 
       console.log("token atom: ", token);
       console.log("FirstTime atom: ", firstTime);
       console.log("is loading atom: ", isLoading);
-      console.log("res:", res.data);
+      console.log("VehicleId atom is :", JSON.stringify(res));
+      console.log("VehicleId atom is :", res.data);
+      console.log("VehicleId atom is :", id);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
@@ -51,85 +67,136 @@ export default function SignUpScreen() {
     }
   };
 
-  function SignUp() {
-    setUserData();
-  }
-
   function SignIn() {
     navigation.navigate("SignInScreen");
   }
   function OnTermsOfUserPressed() {
-    //console.warn("Term of use");
+    console.warn("The password must be at least 8 characters ");
   }
   function OnPrivacyPolicyPresses() {
-    //console.warn("Privacy & Policy");
+    console.warn("Privacy & Policy");
   }
 
   return (
-    <View style={styles.root}>
-      <CustomInput
-        placeholder="FirstName"
-        value={FirstName}
-        setValue={setFirstName}
-        secureTextEntry={false}
-      />
-      <CustomInput
-        placeholder="LastName"
-        value={LastName}
-        setValue={setLastName}
-        secureTextEntry={false}
-      />
-      <CustomInput
-        placeholder="Email"
-        value={Email}
-        setValue={setEmail}
-        secureTextEntry={false}
-      />
-      <CustomInput
-        placeholder="Password"
-        value={Password}
-        setValue={setPassword}
-        secureTextEntry={true}
-      />
-      <CustomInput
-        placeholder="Confirm Password"
-        value={ConfirmPassword}
-        setValue={setConfirmPassword}
-        secureTextEntry={true}
-      />
-      <CustomButton text="Register" onPress={SignUp} type="" />
-      <CustomButton
-        text="Have an Account? Sign-In"
-        onPress={SignIn}
-        type="Secondry"
-      />
-      <Text style={styles.policytext}>
-        By Registering,You confirm that you accept our{" "}
-        <Text style={styles.link} onPress={OnTermsOfUserPressed}>
-          Terms of Use
-        </Text>{" "}
-        and{" "}
-        <Text style={styles.link} onPress={OnPrivacyPolicyPresses}>
-          Privacy Policy
+    <ScrollView>
+      <View style={styles.root}>
+        <SpatialInput
+          rules={{
+            required: "First Name is required",
+            minLength: {
+              value: 3,
+              message: "First Name should be Minimum 3 characters Long"
+            },
+            maxLength: {
+              value: 20,
+              message: "First Name should be Max 12 characters long"
+            },
+            pattern: {
+              value: Name_valid,
+              message:
+                "First Name should not have special characters or numbers"
+            }
+          }}
+          name={"FirstName"}
+          control={control}
+          placeholder="First Name"
+          secureTextEntry={false}
+        />
+
+        <SpatialInput
+          rules={{
+            required: "Last Name is required",
+            minLength: {
+              value: 3,
+              message: "last name should be Minimum 3 characters Long"
+            },
+            maxLength: {
+              value: 20,
+              message: "last name should be Max 12 characters long"
+            },
+            pattern: {
+              value: Name_valid,
+              message: "last name should not have special characters or numbers"
+            }
+          }}
+          name={"LastName"}
+          control={control}
+          placeholder={"LastName"}
+          secureTextEntry={false}
+        />
+
+        <SpatialInput
+          rules={{
+            required: "Email is required",
+            pattern: { value: EMAIL_REGEX, message: "Email invalid" }
+          }}
+          name={"Email"}
+          control={control}
+          placeholder="Email"
+          secureTextEntry={false}
+        />
+
+        <SpatialInput
+          rules={{
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password should be Minimum 8 characters Long"
+            }
+          }}
+          name={"Password"}
+          control={control}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
+
+        <SpatialInput
+          rules={{
+            required: "Confirm Pass is required",
+            validate: value => value === passwd_confirm || "password not match"
+          }}
+          name={"ConfirmPassword"}
+          control={control}
+          placeholder="Confirm Password"
+          secureTextEntry={true}
+        />
+
+        <SpatialButton text="Register" onPress={handleSubmit(signUp)} type="" />
+
+        <SpatialButton
+          text="Have an Account? Sign-In"
+          onPress={SignIn}
+          type="Secondry"
+        />
+
+        <Text style={styles.policytext}>
+          By Registering,You confirm that you accept our{" "}
+          <Text style={styles.link} onPress={OnTermsOfUserPressed}>
+            Terms of Use
+          </Text>{" "}
+          and{" "}
+          <Text style={styles.link} onPress={OnPrivacyPolicyPresses}>
+            Privacy Policy
+          </Text>
         </Text>
-      </Text>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   root: {
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 5,
     flex: 1
   },
 
   title: {
-    fontSize: 14,
+    fontSize: 24,
     fontWeight: "bold",
     color: "051C60",
-    margin: 5,
-    paddingTop: 20
+    margin: 10,
+    paddingTop: 40
   },
   policytext: {
     color: "gray",
