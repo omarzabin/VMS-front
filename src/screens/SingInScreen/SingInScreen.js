@@ -1,26 +1,47 @@
-import { StyleSheet, View, Image, useWindowDimensions } from "react-native";
-import CustomInput from "../../Components/CustomInput/CustomInput";
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  useWindowDimensions,
+  TextInput
+} from "react-native";
+import SpatialInput from "../../Components/SpatialInput/SpatialInput";
+
 import CustomButton from "../../Components/CustomButton/CustomButton";
+import { useNavigation } from "@react-navigation/native";
+import { useForm, Controller, set } from "react-hook-form";
 import { useState } from "react";
 import { authApi } from "../../../api/AxiosApi";
 
 import { useAtom } from "jotai";
-import { tokenAtom, isLoadingAtom } from "../../store/userStore";
+import {
+  tokenAtom,
+  isLoadingAtom,
+  vehicleOwnerAtom
+} from "../../store/userStore";
+import SpatialButton from "../../Components/SpatialButton/SpatialButton";
 
 export default function SignInScreen({ navigation }) {
   const { height } = useWindowDimensions();
+
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-
   //using atom
   const [token, setToken] = useAtom(tokenAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+  const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
 
-  const getUserData = async () => {
+  const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+  const { control, handleSubmit, formState: { errors } } = useForm();
+  console.log(errors);
+  const signIn = async data => {
     try {
       const res = await authApi.auth({
-        email: Email,
-        password: Password
+        email: data.Email,
+        password: data.Password
       });
 
       setToken("token");
@@ -42,9 +63,16 @@ export default function SignInScreen({ navigation }) {
     }
   };
 
-  function SignIn() {
-    getUserData();
-  }
+  // function SignIn(data) {
+  //   console.log(data[1]);
+  //   setEmail(data.Email);
+  //   console.log("email is :", Email);
+
+  //   setPassword(data.Password);
+  //   console.log("Pass is :", Password);
+
+  //   // getUserData();
+  // }
 
   return (
     <View style={styles.root}>
@@ -53,62 +81,61 @@ export default function SignInScreen({ navigation }) {
         resizeMode="contain"
         source={require("../../../assets/logo.png")}
       />
-      <View />
 
-      <View>
-        <View>
-          <CustomInput
-            placeholder="Email"
-            value={Email}
-            setValue={setEmail}
-            secureTextEntry={false}
-          />
-        </View>
+      <SpatialInput
+        rules={{
+          required: "Email is required",
+          pattern: { value: EMAIL_REGEX, message: "Email invalid" }
+        }}
+        // setValue={setEmail}
+        name={"Email"}
+        placeholder="Email"
+        control={control}
+        secureTextEntry={false}
+      />
 
-        <View>
-          <CustomInput
-            placeholder="Password"
-            value={Password}
-            setValue={setPassword}
-            secureTextEntry={true}
-          />
-        </View>
+      <SpatialInput
+        rules={{ required: "Password is required" }}
+        //setValue={setPassword}
+        name={"Password"}
+        placeholder="Password"
+        control={control}
+        secureTextEntry={true}
+      />
 
-        <View>
-          <CustomButton text="Sign In" onPress={SignIn} />
+      <SpatialButton text="Sign In" onPress={handleSubmit(signIn)} />
 
-          <CustomButton
-            text="Forget Password ?"
-            onPress={() => navigation.push("ResetPassword")}
-            type="Secondry"
-          />
+      <SpatialButton
+        text="Forget Password ?"
+        onPress={() => navigation.push("ResetPassword")}
+        type="Secondry"
+      />
 
-          <CustomButton
-            text="Don't have an Account? Create one"
-            onPress={() => navigation.push("SignUpScreen")}
-            type="Secondry"
-          />
-        </View>
-      </View>
+      <SpatialButton
+        text="Don't have an Account? Create one"
+        onPress={() => navigation.push("SignUpScreen")}
+        type="Secondry"
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: {
+    alignItems: "center",
     padding: 20,
     flex: 1
   },
 
   logo: {
-    alignSelf: "center",
     width: "70%",
     maxHeight: 200,
     paddingBottom: 200,
     maxWidth: 300
   },
-  textFailed: {
-    alignSelf: "flex-end",
-    color: "red"
+  text: {
+    borderWidth: 1,
+    width: 200,
+    padding: 10
   }
 });
