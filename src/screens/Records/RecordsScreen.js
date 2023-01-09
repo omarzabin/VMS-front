@@ -9,8 +9,8 @@ export default function RecordsScreen() {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Your Vehicles" component={AddRecordsScreen} />
-      <Tab.Screen name="Add New Vehicles" component={ViewRecords} />
+      <Tab.Screen name="Your Records" component={AddRecordsScreen} />
+      <Tab.Screen name="Add New Records" component={ViewRecords} />
     </Tab.Navigator>
   );
 }

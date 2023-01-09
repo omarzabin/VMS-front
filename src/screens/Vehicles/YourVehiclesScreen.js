@@ -81,6 +81,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold"
   },
-  outerContends: { borderWidth: 0.5, margin: 6 },
-  innerContends: {}
+  outerBox: { borderWidth: 0.5, margin: 6 },
+  innerBox: {}
 });

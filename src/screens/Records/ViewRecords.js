@@ -3,23 +3,23 @@ import { useRoute } from "@react-navigation/native";
 
 export default function ViewRecords() {
   const route = useRoute();
-  console.log(route.params.RepairPart);
+  // console.log(route.params.RepairPart);
   return (
     <View style={styles.main}>
       <Text>
-        The Repair Part is :{route.params.RepairPart}{" "}
+        The Repair Part is :{"as"}{" "}
       </Text>
       <Text>
-        The Part is :{Part}{" "}
+        The Part is :{"Part"}{" "}
       </Text>
       <Text>
-        Description :{Description}
+        Description :{"Description"}
       </Text>
       <Text>
-        The Price is :{price}
+        The Price is :{"price"}
       </Text>
       <Text>
-        The Workshop is :{route.params.Workshop}
+        The Workshop is :{"ss"}
       </Text>
     </View>
   );
