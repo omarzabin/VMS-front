@@ -6,13 +6,14 @@ import CustomInput from "../../Components/CustomInput/CustomInput";
 import { ScrollView } from "react-native-gesture-handler";
 import { SelectList } from "react-native-dropdown-select-list";
 import { useNavigation } from "@react-navigation/native";
-import { firstTimeAtom } from "../../store/userStore";
+import { firstTimeAtom, vehicleOwnerId } from "../../store/userStore";
 import { useAtom } from "jotai";
 import CustomDatePicker from "../../Components/CustomDatePicker/CustomDatePicker";
 
 export default function AddNewVehiclesScreen() {
   const navigation = useNavigation("");
   const [firstTime, setFirstTime] = useAtom(firstTimeAtom);
+  const [id, setId] = useAtom(vehicleOwnerId);
 
   const [VehicleAutomakerOptions] = useState([
     { key: "mer", value: "Mercedes Benz" },
@@ -32,6 +33,7 @@ export default function AddNewVehiclesScreen() {
 
   useEffect(
     () => {
+      console.log(id);
       const filteredModels = models[selectedVehicleAutomaker];
       setModelOptions(filteredModels);
     },
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 5,
     borderWidth: 0.5,
-    borderColor: "red",
+    borderColor: "black",
     borderRadius: 10
   },
   headerText: {
