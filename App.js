@@ -17,9 +17,15 @@ import AppStack from "./src/screens/Navigation/AppStack";
 import FirstTimeStack from "./src/screens/Navigation/FirstTimeStack";
 
 export default function App() {
+
   const [token] = useAtom(tokenAtom);
   const [firstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+
+  if(true) return <Navigation />;
+else{
+
+
 
   if (isLoading) {
     return (
@@ -48,6 +54,7 @@ export default function App() {
         : token !== null && !firstTime ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
+}
 }
 
 EStyleSheet.build(
