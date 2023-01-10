@@ -5,16 +5,15 @@ import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 
 import EStyleSheet from "react-native-extended-stylesheet";
-
 import { useAtom } from "jotai";
 import {
   tokenAtom,
   isLoadingAtom,
-  firstTimeAtom
-} from "../VMSFront/src/store/userStore";
+  firstTimeAtom} from "./src/store/userStore";
 import AuthStack from "./src/screens/Navigation/AuthStack";
 import AppStack from "./src/screens/Navigation/AppStack";
 import FirstTimeStack from "./src/screens/Navigation/FirstTimeStack";
+
 
 export default function App() {
 
@@ -49,6 +48,7 @@ export default function App() {
   } else {
   }
   return (
+    
     <NavigationContainer>
       {token !== null && firstTime
         ? <FirstTimeStack />
