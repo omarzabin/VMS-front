@@ -22,8 +22,9 @@ export default function App() {
   const [firstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
+
   if(true) return <Navigation />;
-else{
+
 
 
 
@@ -55,7 +56,8 @@ else{
     </NavigationContainer>
   );
 }
-}
+
+
 
 EStyleSheet.build(
   {
