@@ -52,7 +52,6 @@ export default function SignUpScreen() {
       console.log("token atom: ", token);
       console.log("FirstTime atom: ", firstTime);
       console.log("is loading atom: ", isLoading);
-      console.log("VehicleId atom is :", JSON.stringify(res));
       console.log("VehicleId atom is :", res.data);
       console.log("VehicleId atom is :", id);
     } catch (error) {
