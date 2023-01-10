@@ -78,7 +78,7 @@ export function DrawerContent(props) {
             <DrawerItem
               icon={({ color, size }) =>
                 <Icon name="receipt" color={color} size={size} />}
-              label="Records"
+              label="Records" 
               onPress={() => {
                 {
                   props.navigation.navigate("Records");
@@ -102,7 +102,7 @@ export function DrawerContent(props) {
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
             icon={({ color, size }) =>
-              <Icon name="logout" color={color} size={size} />}
+              <Icon name="logout" color='red' size={size}  />}
             label="Sign Out"
             onPress={SignOut}
           />
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   bottomDrawerSection: {
     marginBottom: 15,
     borderTopColor: "#f4f4f4",
-    borderTopWidth: 1
+    borderTopWidth: 1,
   },
   preference: {
     flexDirection: "row",

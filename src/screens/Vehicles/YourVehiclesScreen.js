@@ -16,50 +16,54 @@ export default function YourVehiclesScreen() {
 
   if (true)
     return (
-      <ScrollView style={{ backgroundColor: "white" }}>
+      <ScrollView style={{ backgroundColor: "#F9FBFC" }}>
         <View>
           <Text style={styles.mainText}>Vehicle Information</Text>
           <View style={styles.outerContends}>
             <View style={styles.innerContends}>
-              <Text>Vehicle Automaker</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Vehicle Automaker</Text>
               <CustomInput />
             </View>
             <View style={styles.innerContends}>
-              <Text>Vehicle Model</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Vehicle Model</Text>
               <CustomInput />
             </View>
             <View style={styles.innerContends}>
-              <Text>Vehicle Manufacture Year</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Vehicle Manufacture Year</Text>
               <CustomInput />
             </View>
             <View style={styles.innerContends}>
-              <Text>Vehicle Plate Number</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Vehicle Plate Number</Text>
               <CustomInput />
             </View>
             <View style={styles.innerContends}>
-              <Text>Vehicle Color</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Vehicle Color</Text>
+              <CustomInput />
+            </View>
+            <View style={styles.innerContends}>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Device IMEI</Text>
               <CustomInput />
             </View>
           </View>
           <Text style={styles.mainText}>Registration Information</Text>
           <View style={styles.outerContends}>
             <View>
-              <Text>Vehicle Classification</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Vehicle Classification</Text>
               <CustomInput />
             </View>
             <View>
-              <Text>Expiry Date</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Expiry Date</Text>
               <CustomInput />
             </View>
           </View>
           <Text style={styles.mainText}>Insurance Information</Text>
           <View style={styles.outerContends}>
             <View>
-              <Text>Insurance Type</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Insurance Type</Text>
               <CustomInput />
             </View>
             <View>
-              <Text>Expiry Date</Text>
+              <Text style={{alignSelf:'stretch',padding:10,fontWeight:'500'}}>Expiry Date</Text>
               <CustomInput />
             </View>
           </View>
@@ -67,11 +71,10 @@ export default function YourVehiclesScreen() {
       </ScrollView>
     );
 }
-
 const styles = StyleSheet.create({
   mainText: {
     textAlign: "center",
-    backgroundColor: "#F9FBFC",
+    backgroundColor: "red",
     marginTop: 10,
     paddingVertical: 5,
     borderWidth: 1,
@@ -79,7 +82,8 @@ const styles = StyleSheet.create({
     borderColor: "snow",
     borderStyle: "dashed",
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    
   },
   outerBox: { borderWidth: 0.5, margin: 6 },
   innerBox: {}

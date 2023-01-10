@@ -25,7 +25,7 @@ export default function AlertsScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       {data.map(item =>
         <Alert
           temp={100}

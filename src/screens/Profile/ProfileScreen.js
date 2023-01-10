@@ -9,8 +9,9 @@ export default function ProfileScreen() {
   const { control, handleSubmit, watch } = useForm();
   const [iseditable, setiseditable] = useState("false");
 
-  function OnchangePaspress() {
-    console.warn("change pass");
+
+  function Onchangepress() {
+    console.warn("change");
   }
   function onIconPress() {
     console.warn("Icon pressed");
@@ -18,14 +19,8 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.root}>
-        <View style={styles.rowtitle}>
-          <Text style={styles.title}>User Profile</Text>
-          <Pressable onPress={onIconPress}>
-            <FontAwesome5 name="user-edit" style={styles.icon} size={20} />
-          </Pressable>
-        </View>
-        <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
+    <View>
+        <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" ,paddingTop:40}}>
           First Name :
         </Text>
 
@@ -46,6 +41,7 @@ export default function ProfileScreen() {
           placeholder=""
           secureTextEntry={false}
           editable={false}
+          
         />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
@@ -58,7 +54,6 @@ export default function ProfileScreen() {
           secureTextEntry={false}
         />
 
-        <Text style={styles.title}>Password</Text>
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Current password :
@@ -88,13 +83,20 @@ export default function ProfileScreen() {
           control={control}
           placeholder=""
           secureTextEntry={false}
+          
         />
 
-        <SpatialButton
-          text="Change Password "
-          onPress={OnchangePaspress}
+      <View style={styles.button}>
+      <SpatialButton
+          text="Save Changes  "
+          onPress={Onchangepress}
           type="userChangepass"
+        
         />
+      
+       
+        
+      </View>
       </View>
     </ScrollView>
   );
@@ -116,8 +118,8 @@ const styles = StyleSheet.create({
   },
 
   row: {
-    alignContent: "space-between",
-    paddingBottom: 10,
+    alignContent: "flex-start",
+  
     flexDirection: "row"
   },
   icon: {
@@ -127,7 +129,13 @@ const styles = StyleSheet.create({
   },
   rowtitle: {
     flexDirection: "row",
-    justifyContent: "center",
-    padding: 10
+    alignItems:'flex-start',
+    paddingRight:250,
+    padding:10,
+  
+  },
+  button:{
+padding:25
   }
+
 });
