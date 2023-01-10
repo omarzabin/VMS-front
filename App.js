@@ -13,7 +13,7 @@ import {
 import AuthStack from "./src/screens/Navigation/AuthStack";
 import AppStack from "./src/screens/Navigation/AppStack";
 import FirstTimeStack from "./src/screens/Navigation/FirstTimeStack";
-import{TouchableWithoutFeedback} from 'react-native';
+
 
 export default function App() {
   
