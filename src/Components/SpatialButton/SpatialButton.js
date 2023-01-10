@@ -47,15 +47,16 @@ const styles = StyleSheet.create({
 
   container_userChangepass: {
     backgroundColor: "white",
-    width: 200,
+    width: 150,
     height: 50,
     borderRadius: 50,
-    marginHorizontal: "15%"
+    marginHorizontal: "15%",
+    width:250,
   },
   text_userChangepass: {
     color: "black",
     fontSize: 12,
-    fontWeight: "600"
+    fontWeight: "600",
   },
 
   container_submit: {

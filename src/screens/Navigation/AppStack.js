@@ -17,7 +17,7 @@ const Drawer = createDrawerNavigator();
 
 const AppStack = () => {
   return (
-    <Drawer.Navigator
+    <Drawer.Navigator 
       initialRouteName="Home"
       drawerContent={props => <DrawerContent {...props} />}
     >
