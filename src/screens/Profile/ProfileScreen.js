@@ -93,6 +93,7 @@ export default function ProfileScreen() {
           type="userChangepass"
         
         />
+        <View></View>
       
        
         
