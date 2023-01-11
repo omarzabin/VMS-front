@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
 import Alert from "./Alert";
@@ -7,6 +7,15 @@ import { AlertsApi } from "../../../api/AxiosApi";
 
 import { useNavigation } from "@react-navigation/native";
 export default function AlertsScreen() {
+  const [refresh, setRefresh] = useState(false);
+
+  const pull = () => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 4000);
+  };
+
   const [data, setData] = useState([]);
   const navigation = useNavigation();
   const getAlerts = async () => {
@@ -21,11 +30,24 @@ export default function AlertsScreen() {
 
   useEffect(() => {
     getAlerts();
+
     //console.log("time:", data.map(item => (item = item.gpsTime.split("T")[1])));
   }, []);
 
   return (
-    <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.root}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refresh}
+          onRefresh={() => {
+            pull();
+            getAlerts();
+          }}
+        />
+      }
+    >
       {data.map(item =>
         <Alert
           temp={100}

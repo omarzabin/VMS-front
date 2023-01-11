@@ -20,3 +20,9 @@ export const AlertsApi = {
     return axios.get("Alerts");
   }
 };
+export const updateOwnerApi = {
+  update: data => {
+    console.log("calling update", data);
+    return axios.put(`VehicleOwner/${data.ownerId}`, data);
+  }
+};

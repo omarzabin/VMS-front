@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  ScrollView,
+  Alert
+} from "react-native";
 import { useState } from "react";
 import SpatialButton from "../../Components/SpatialButton/SpatialButton";
 
@@ -8,17 +15,46 @@ import { useForm } from "react-hook-form";
 import { vehicleOwnerAtom } from "../../store/userStore";
 import { useAtom } from "jotai";
 import CustomInput from "../../Components/CustomInput/CustomInput";
+import { updateOwnerApi } from "../../../api/AxiosApi";
 
 export default function ProfileScreen() {
   const { control, handleSubmit, watch } = useForm();
-  const [iseditable, setiseditable] = useState("false");
   const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
-  function Onchangepress() {
-    console.warn("change");
+
+  const [email, setEmail] = useState(vehicleOwner.email);
+  const [firstName, setFirstName] = useState(vehicleOwner.firstName);
+  const [lastName, setLastName] = useState(vehicleOwner.lastName);
+  const [password, setPassword] = useState(vehicleOwner.password);
+  const [ConfirmPassword, setConfirmPassword] = useState();
+
+  function save() {
+    console.log(`first`);
+    updateVehicleOwnerInfo();
   }
-  function onIconPress() {
-    console.warn("Icon pressed");
-  }
+
+  const updateVehicleOwnerInfo = async () => {
+    try {
+      console.log("update");
+      const res = await updateOwnerApi.update({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        ownerId: vehicleOwner.ownerId
+      });
+      console.warn("first name updated:", firstName);
+      console.log("res: ", res.data);
+      setVehicleOwner({
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        password: password
+      });
+      Alert.alert("Done");
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -34,23 +70,17 @@ export default function ProfileScreen() {
           First Name :
         </Text>
 
-        <CustomInput value={vehicleOwner.firstName} />
+        <CustomInput value={firstName} setValue={setFirstName} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Last Name :
         </Text>
-        <CustomInput value={vehicleOwner.lastName} />
+        <CustomInput value={lastName} setValue={setLastName} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Email :
         </Text>
         <CustomInput value={vehicleOwner.email} />
-        <SpatialInput
-          name={"Email"}
-          control={control}
-          placeholder=""
-          secureTextEntry={false}
-        />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Current password :
@@ -59,7 +89,7 @@ export default function ProfileScreen() {
           name={"Current-password"}
           control={control}
           placeholder=""
-          secureTextEntry={false}
+          secureTextEntry={true}
         />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
@@ -69,7 +99,7 @@ export default function ProfileScreen() {
           name={"New-Password"}
           control={control}
           placeholder=""
-          secureTextEntry={false}
+          secureTextEntry={true}
         />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
@@ -79,31 +109,11 @@ export default function ProfileScreen() {
           name={"Confirm-New-Password"}
           control={control}
           placeholder=""
-          secureTextEntry={false}
+          secureTextEntry={true}
         />
-
-
-      <View style={styles.button}>
-      <SpatialButton
-          text="Save Changes  "
-          onPress={Onchangepress}
-          type="userChangepass"
-        
-        />
-        <View></View>
-      
-       
-        
-      </View>
-
         <View style={styles.button}>
-          <SpatialButton
-            text="Save Changes  "
-            onPress={Onchangepress}
-            type="userChangepass"
-          />
+          <SpatialButton text="Save Changes  " onPress={save} type="save" />
         </View>
-
       </View>
     </ScrollView>
   );

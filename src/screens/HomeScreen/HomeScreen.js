@@ -35,7 +35,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.rightContainer}>
-            <Icon name="circle" color={"red"} size={35} l />
+            <Icon name="circle" color={"red"} size={35} />
           </View>
         </View>
         <View style={styles.informationContainer}>
