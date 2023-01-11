@@ -6,26 +6,15 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import EStyleSheet from "react-native-extended-stylesheet";
 import { useAtom } from "jotai";
-import {
-  tokenAtom,
-  isLoadingAtom,
-  firstTimeAtom} from "./src/store/userStore";
+import { tokenAtom, isLoadingAtom, firstTimeAtom } from "./src/store/userStore";
 import AuthStack from "./src/screens/Navigation/AuthStack";
 import AppStack from "./src/screens/Navigation/AppStack";
 import FirstTimeStack from "./src/screens/Navigation/FirstTimeStack";
 
-
 export default function App() {
-
   const [token] = useAtom(tokenAtom);
   const [firstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
-
-
-  if(true) return <Navigation />;
-
-
-
 
   if (isLoading) {
     return (
@@ -48,7 +37,6 @@ export default function App() {
   } else {
   }
   return (
-    
     <NavigationContainer>
       {token !== null && firstTime
         ? <FirstTimeStack />
@@ -56,8 +44,6 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-
 
 EStyleSheet.build(
   {

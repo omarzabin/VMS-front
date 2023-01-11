@@ -5,14 +5,17 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAtom } from "jotai";
-import { alertLocationAtom } from "../../store/userStore";
+import { alertLocationAtom, vehicleOwnerAtom } from "../../store/userStore";
 export default function HomeScreen() {
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
+  const [VehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
 
   const [selected, setSelected] = useState("");
   const [iconColor, setIconColor] = useState("red");
 
   const data = [{ key: "1", value: "Camry" }, { key: "2", value: "Accord" }];
+
+  console.log(VehicleOwner);
 
   return (
     <View style={styles.outerContainer}>

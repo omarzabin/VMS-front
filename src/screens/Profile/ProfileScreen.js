@@ -1,15 +1,18 @@
 import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
 import { useState } from "react";
 import SpatialButton from "../../Components/SpatialButton/SpatialButton";
+
 import { FontAwesome5 } from "@expo/vector-icons";
 import SpatialInput from "../../Components/SpatialInput/SpatialInput";
 import { useForm } from "react-hook-form";
+import { vehicleOwnerAtom } from "../../store/userStore";
+import { useAtom } from "jotai";
+import CustomInput from "../../Components/CustomInput/CustomInput";
 
 export default function ProfileScreen() {
   const { control, handleSubmit, watch } = useForm();
   const [iseditable, setiseditable] = useState("false");
-
-
+  const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
   function Onchangepress() {
     console.warn("change");
   }
@@ -19,41 +22,35 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-    <View>
-        <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" ,paddingTop:40}}>
+      <View>
+        <Text
+          style={{
+            alignSelf: "stretch",
+            padding: 10,
+            fontWeight: "500",
+            paddingTop: 40
+          }}
+        >
           First Name :
         </Text>
 
-        <SpatialInput
-          name={"First-Name"}
-          control={control}
-          placeholder=""
-          secureTextEntry={false}
-          editable={false}
-        />
+        <CustomInput value={vehicleOwner.firstName} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Last Name :
         </Text>
-        <SpatialInput
-          name={"Last-Name"}
-          control={control}
-          placeholder=""
-          secureTextEntry={false}
-          editable={false}
-          
-        />
+        <CustomInput value={vehicleOwner.lastName} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Email :
         </Text>
+        <CustomInput value={vehicleOwner.email} />
         <SpatialInput
           name={"Email"}
           control={control}
           placeholder=""
           secureTextEntry={false}
         />
-
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Current password :
@@ -83,8 +80,8 @@ export default function ProfileScreen() {
           control={control}
           placeholder=""
           secureTextEntry={false}
-          
         />
+
 
       <View style={styles.button}>
       <SpatialButton
@@ -98,6 +95,15 @@ export default function ProfileScreen() {
        
         
       </View>
+
+        <View style={styles.button}>
+          <SpatialButton
+            text="Save Changes  "
+            onPress={Onchangepress}
+            type="userChangepass"
+          />
+        </View>
+
       </View>
     </ScrollView>
   );
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
 
   row: {
     alignContent: "flex-start",
-  
+
     flexDirection: "row"
   },
   icon: {
@@ -130,13 +136,11 @@ const styles = StyleSheet.create({
   },
   rowtitle: {
     flexDirection: "row",
-    alignItems:'flex-start',
-    paddingRight:250,
-    padding:10,
-  
+    alignItems: "flex-start",
+    paddingRight: 250,
+    padding: 10
   },
-  button:{
-padding:25
+  button: {
+    padding: 25
   }
-
 });

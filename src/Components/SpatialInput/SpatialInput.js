@@ -9,11 +9,10 @@ export default function SpatialInput({control,name,placeholder,rules={},secureTe
       name={name}
       control={control}
       rules={rules}
-      render={({field:{value,onChange,onBlur,setValue},fieldState:{error}})=>(
+      render={({field:{value,onChange,onBlur},fieldState:{error}})=>(
       <><View style={[styles.container, { borderColor: error ? 'red' : '#e8e8e8' }]}>
          <TextInput 
            value={value}
-           setValue={setValue}
            onChangeText={onChange}
            onBlur={onBlur}
            style={styles.input}

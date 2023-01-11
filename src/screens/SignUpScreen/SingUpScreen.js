@@ -33,6 +33,7 @@ export default function SignUpScreen() {
   const [firstTime, setFirstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
   const [id, setId] = useAtom(vehicleOwnerId);
+  const [emailError, setEmailError] = useState("");
 
   const signUp = async data => {
     try {
@@ -62,6 +63,7 @@ export default function SignUpScreen() {
       console.log("token atom: ", token);
       console.log("FirstTime atom: ", firstTime);
       console.log("is loading atom: ", isLoading);
+      setEmailError("Email is already registered !");
       console.log("error", JSON.stringify(error));
     }
   };
@@ -159,7 +161,9 @@ export default function SignUpScreen() {
           placeholder="Confirm Password"
           secureTextEntry={true}
         />
-
+        <Text style={{ color: "red", fontSize: 17 }}>
+          {emailError}
+        </Text>
         <SpatialButton text="Register" onPress={handleSubmit(signUp)} type="" />
 
         <SpatialButton
