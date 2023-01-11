@@ -82,6 +82,20 @@ export default function ProfileScreen() {
           secureTextEntry={false}
         />
 
+
+      <View style={styles.button}>
+      <SpatialButton
+          text="Save Changes  "
+          onPress={Onchangepress}
+          type="userChangepass"
+        
+        />
+        <View></View>
+      
+       
+        
+      </View>
+
         <View style={styles.button}>
           <SpatialButton
             text="Save Changes  "
@@ -89,6 +103,7 @@ export default function ProfileScreen() {
             type="userChangepass"
           />
         </View>
+
       </View>
     </ScrollView>
   );

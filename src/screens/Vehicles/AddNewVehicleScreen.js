@@ -66,7 +66,7 @@ export default function AddNewVehiclesScreen() {
 
   if (true)
     return (
-      <ScrollView style={{ backgroundColor: "white" }}>
+      <ScrollView style={{ backgroundColor: "white" }} showsVerticalScrollIndicator={false}>
         <Text
           style={{
             fontSize: 18,

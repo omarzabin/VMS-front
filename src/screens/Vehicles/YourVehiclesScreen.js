@@ -16,7 +16,7 @@ export default function YourVehiclesScreen() {
 
   if (true)
     return (
-      <ScrollView style={{ backgroundColor: "#F9FBFC" }}>
+      <ScrollView style={{ backgroundColor: "#F9FBFC" }} showsVerticalScrollIndicator={false}>
         <View>
           <Text style={styles.mainText}>Vehicle Information</Text>
           <View style={styles.outerContends}>
