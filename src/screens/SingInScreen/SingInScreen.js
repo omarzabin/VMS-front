@@ -25,9 +25,7 @@ import SpatialButton from "../../Components/SpatialButton/SpatialButton";
 
 export default function SignInScreen({ navigation }) {
   const { height } = useWindowDimensions();
-
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [unAuthMEssage, setUnAuthMessage] = useState();
   //using atom
   const [token, setToken] = useAtom(tokenAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
@@ -43,7 +41,7 @@ export default function SignInScreen({ navigation }) {
         email: data.Email,
         password: data.Password
       });
-
+      setVehicleOwner(res.data);
       setToken("token");
       setIsLoading(true);
 
@@ -51,12 +49,12 @@ export default function SignInScreen({ navigation }) {
 
       console.log("token atom: ", token);
       console.log("is loading atom: ", isLoading);
-      console.log("res:", res.data);
+      console.log("res:", vehicleOwner);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
       console.log("---------2---------");
-      console.warn("Email or Password are Unvalued");
+      setUnAuthMessage("Unregistered email, Please create account first");
       console.log("token atom: ", token);
       console.log("is loading atom: ", isLoading);
       console.log("error", JSON.stringify(error));
@@ -87,8 +85,9 @@ export default function SignInScreen({ navigation }) {
           required: "Email is required",
           pattern: { value: EMAIL_REGEX, message: "Email invalid" }
         }}
-        // setValue={setEmail}
-        name={"Email"}
+        name={
+          "Email" // setValue={setEmail}
+        }
         placeholder="Email"
         control={control}
         secureTextEntry={false}
@@ -96,12 +95,16 @@ export default function SignInScreen({ navigation }) {
 
       <SpatialInput
         rules={{ required: "Password is required" }}
-        //setValue={setPassword}
-        name={"Password"}
+        name={
+          "Password" //setValue={setPassword}
+        }
         placeholder="Password"
         control={control}
         secureTextEntry={true}
       />
+      <Text style={{ color: "red", fontSize: 17 }}>
+        {unAuthMEssage}
+      </Text>
 
       <SpatialButton text="Sign In" onPress={handleSubmit(signIn)} />
 
