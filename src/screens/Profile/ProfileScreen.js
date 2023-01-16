@@ -25,6 +25,7 @@ export default function ProfileScreen() {
   const [firstName, setFirstName] = useState(vehicleOwner.firstName);
   const [lastName, setLastName] = useState(vehicleOwner.lastName);
   const [password, setPassword] = useState(vehicleOwner.password);
+  const [newPassword, setNewPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState();
 
   function save() {
@@ -73,17 +74,13 @@ export default function ProfileScreen() {
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Email :
         </Text>
-        <CustomInput value={vehicleOwner.email} />
+        {console.log(email)}
+        <CustomInput value={email} setValue={setEmail} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Current password :
         </Text>
-        <SpatialInput
-          name={"Current-password"}
-          control={control}
-          placeholder=""
-          secureTextEntry={true}
-        />
+        <CustomInput setValue={setPassword} placeholder="" />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           New Password :
