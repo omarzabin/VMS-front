@@ -41,14 +41,36 @@ export const updateOwnerApi = {
     );
   }
 };
-export const addVehicle = {
+// export const addVehicle = {
+//   addVehicle: data => {
+//     console.log("calling addVehicle", data);
+//     return axios.post(`Vehicle`, data);
+//   },
+//   addRegistration: data => {
+//     console.log("calling addRegistration", data);
+//     return axios.post(`VehicleRegistration`, data);
+//   },
+//   addInsurance: data => {
+//     console.log("calling addInsurance", data);
+//     return axios.post(`Insurance`, data);
+//   }
+// };
+export const vehicleApi = {
   addVehicle: data => {
     console.log("calling addVehicle", data);
     return axios.post(`Vehicle`, data);
   },
+  getVehicle: vehicleId => {
+    console.log("calling getVehicle", vehicleId);
+    return axios.get(`Vehicle/${vehicleId}`);
+  },
   addRegistration: data => {
     console.log("calling addRegistration", data);
     return axios.post(`VehicleRegistration`, data);
+  },
+  getRegistration: regId => {
+    console.log("calling getRegistration", regId);
+    return axios.get(`VehicleRegistration/${regId}`);
   },
   addInsurance: data => {
     console.log("calling addInsurance", data);

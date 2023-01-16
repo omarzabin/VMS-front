@@ -26,11 +26,11 @@ export default function CustomInput({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#edf5fa",
     width: "100%",
     borderColor: "#e8e8e8",
-    borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: 1.5,
+    borderRadius: 8,
     paddingHorizontal: 10,
     marginVertical: 7,
     padding: 10
