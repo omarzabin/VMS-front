@@ -7,10 +7,12 @@ import {
   TouchableHighlight,
   View
 } from "react-native";
+import { useAtom } from "jotai";
 
 import DatePicker from "react-native-date-picker";
+//import { dateAtom } from "../../store/userStore";
 
-const CustomDatePicker = () => {
+const CustomDatePicker = ({ setValue }) => {
   // const [date, setDate] = useState(moment);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);

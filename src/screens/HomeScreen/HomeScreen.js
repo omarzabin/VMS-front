@@ -1,21 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
+import { AlertsApi } from "../../../api/AxiosApi";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAtom } from "jotai";
-import { alertLocationAtom, vehicleOwnerAtom } from "../../store/userStore";
-export default function HomeScreen() {
+import {
+  alertLocationAtom,
+  vehicleOwnerAtom,
+  deviceIMEIAtom
+} from "../../store/userStore";
+import Alert from "../Alerts/Alert";
+export default function HomeScreen({ route, navigation }) {
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
   const [VehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
+  const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
+
+  //const [date, setDate] = useState(new Date());
+  const [alertData, setAlertData] = useState([]);
 
   const [selected, setSelected] = useState("");
-  const [iconColor, setIconColor] = useState("red");
 
   const data = [{ key: "1", value: "Camry" }, { key: "2", value: "Accord" }];
 
-  console.log(VehicleOwner);
+  const getLatestAlert = async () => {
+    try {
+      const { data } = await AlertsApi.getLatest(deviceImEI);
+      setAlertData(data);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+    }
+  };
+  useEffect(() => {
+    getLatestAlert();
+  }, []);
 
   return (
     <View style={styles.outerContainer}>
@@ -28,98 +47,29 @@ export default function HomeScreen() {
           placeholder="Select Vehicle"
         />
       </View>
-      <ScrollView style={{ maxHeight: 250 }}>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Engine status</Text>
-          </View>
+      <View style={{ maxHeight: 300 }}>
+        {alertData.map(item =>
+          <Alert
+            temp={100}
+            long={item.longitude}
+            lat={item.latitude}
+            time={
+              "In: " +
+              item.gpsTime.split("T")[0] +
+              " At: " +
+              item.gpsTime.split("T")[1]
+            }
+            speed={item.speed === 0 ? "0" : item.speed}
+            vehicleIGN={item.vehicleIGN}
+            addressAr={item.addressAr}
+            pNumber="37-26283"
+            extProp={item.extendedProperties}
+            isScrollable
+            //locationId={item.locationId}
+          />
+        )}
+      </View>
 
-          <View style={styles.rightContainer}>
-            <Icon name="circle" color={"red"} size={35} />
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-        <View style={styles.informationContainer}>
-          <View style={styles.leftContainer}>
-            <Text style={{ fontSize: 19 }}>Last Alert</Text>
-          </View>
-
-          <View style={styles.rightContainer}>
-            <Text style={{ fontSize: 19 }}> Alert</Text>
-          </View>
-        </View>
-      </ScrollView>
       <View style={styles.LocationContainer}>
         <View style={styles.mapContainer}>
           <MapView
@@ -135,6 +85,17 @@ export default function HomeScreen() {
             }}
             zoomControlEnabled
           >
+            {/* {markerLocation.long === 0 && markerLocation.lat === 0
+              ? setMarkerLocation({
+                  long: alertData[0].longitude,
+                  lat: alertData[0].latitude
+                })
+              : <Marker
+                  coordinate={{
+                    latitude: markerLocation.lat,
+                    longitude: markerLocation.long
+                  }}
+                />} */}
             <Marker
               coordinate={{
                 latitude: markerLocation.lat,
@@ -155,7 +116,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     backgroundColor: "#f1f3f5"
   },
-  selectListContainer: { padding: 3, marginBottom: 15 },
+  selectListContainer: { padding: 3, marginBottom: 15, marginHorizontal: 8 },
   informationContainer: {
     flexDirection: "row",
     paddingHorizontal: 6,
@@ -171,7 +132,8 @@ const styles = StyleSheet.create({
   leftContainer: { paddingTop: 6 },
   rightContainer: { paddingRight: 10 },
   mapContainer: {
-    height: 400,
+    height: 350,
+
     shadowColor: "black",
     shadowOffset: { width: 1, hight: 1 },
     shadowOpacity: 0.5,

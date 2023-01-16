@@ -14,7 +14,9 @@ const FirstTimeStack = () => {
       <Stack.Screen
         name="AddNewVehiclesScreen"
         component={AddNewVehiclesScreen}
-        options={{ title: "Add New Vehicle" }}
+        options={{
+          title: "Add New Vehicle"
+        }}
       />
       <Stack.Screen
         name="AppStack"

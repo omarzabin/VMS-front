@@ -9,7 +9,7 @@ import {
   tokenAtom,
   isLoadingAtom,
   firstTimeAtom,
-  vehicleOwnerId
+  vehicleOwnerAtom
 } from "../../store/userStore";
 import { registerApi } from "../../../api/AxiosApi";
 import { useForm } from "react-hook-form";
@@ -32,8 +32,9 @@ export default function SignUpScreen() {
   const [token, setToken] = useAtom(tokenAtom);
   const [firstTime, setFirstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
-  const [id, setId] = useAtom(vehicleOwnerId);
+
   const [emailError, setEmailError] = useState("");
+  const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
 
   const signUp = async data => {
     try {
@@ -46,23 +47,20 @@ export default function SignUpScreen() {
       setToken("token");
       setIsLoading(true);
       setFirstTime(true);
-      setId(res.data);
 
-      console.log("---------1---------");
-
-      console.log("token atom: ", token);
-      console.log("FirstTime atom: ", firstTime);
-      console.log("is loading atom: ", isLoading);
-      console.log("VehicleId atom is :", res.data);
-      console.log("VehicleId atom is :", id);
+      setVehicleOwner({
+        firstName: data.FirstName,
+        lastName: data.LastName,
+        email: data.Email,
+        password: data.Password,
+        ownerId: res.data,
+        vehicleId: 0
+      });
+      console.log("VehicleOwner:", vehicleOwner);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
       setFirstTime(false);
-      console.log("---------2---------");
-      console.log("token atom: ", token);
-      console.log("FirstTime atom: ", firstTime);
-      console.log("is loading atom: ", isLoading);
       setEmailError("Email is already registered !");
       console.log("error", JSON.stringify(error));
     }

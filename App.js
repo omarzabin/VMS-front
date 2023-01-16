@@ -16,15 +16,6 @@ export default function App() {
   const [firstTime] = useAtom(firstTimeAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} style={{ flex: 1 }} />
-        {setIsLoading(false)}
-      </View>
-    );
-  } else {
-  }
   return (
     <NavigationContainer>
       {token !== null && firstTime

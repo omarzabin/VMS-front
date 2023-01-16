@@ -19,7 +19,8 @@ import { useAtom } from "jotai";
 import {
   tokenAtom,
   isLoadingAtom,
-  vehicleOwnerAtom
+  vehicleOwnerAtom,
+  deviceIMEIAtom
 } from "../../store/userStore";
 import SpatialButton from "../../Components/SpatialButton/SpatialButton";
 
@@ -30,47 +31,42 @@ export default function SignInScreen({ navigation }) {
   const [token, setToken] = useAtom(tokenAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
   const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
+  const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
 
   const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
   const { control, handleSubmit, formState: { errors } } = useForm();
-  console.log(errors);
+
   const signIn = async data => {
+    console.log("first");
     try {
-      const res = await authApi.auth({
+      const owner = await authApi.auth({
         email: data.Email,
         password: data.Password
       });
-      setVehicleOwner(res.data);
+      console.log("owner data: ", owner.data.firstName);
+      setVehicleOwner({
+        firstName: owner.data.firstName,
+        lastName: owner.data.lastName,
+        email: owner.data.Email,
+        password: owner.data.Password,
+        ownerId: owner.data.ownerId,
+        vehicleId: owner.data.vehicleId
+      });
+      console.log("vehivleOWner :", vehicleOwner.data);
+      const deviceIMEI = await authApi.getDeviseIMEI({
+        ownerId: owner.data.ownerId
+      });
+      setDeviceIMEI(deviceIMEI.data);
       setToken("token");
       setIsLoading(true);
-
-      console.log("---------1---------");
-
-      console.log("token atom: ", token);
-      console.log("is loading atom: ", isLoading);
-      console.log("res:", vehicleOwner);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
-      console.log("---------2---------");
-      setUnAuthMessage("Unregistered email, Please create account first");
-      console.log("token atom: ", token);
-      console.log("is loading atom: ", isLoading);
+      setUnAuthMessage("Email or password is incorrect");
       console.log("error", JSON.stringify(error));
     }
   };
-
-  // function SignIn(data) {
-  //   console.log(data[1]);
-  //   setEmail(data.Email);
-  //   console.log("email is :", Email);
-
-  //   setPassword(data.Password);
-  //   console.log("Pass is :", Password);
-
-  //   // getUserData();
-  // }
 
   return (
     <View style={styles.root}>

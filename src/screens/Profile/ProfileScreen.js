@@ -28,14 +28,12 @@ export default function ProfileScreen() {
   const [ConfirmPassword, setConfirmPassword] = useState();
 
   function save() {
-    console.log(`first`);
     updateVehicleOwnerInfo();
   }
 
   const updateVehicleOwnerInfo = async () => {
     try {
-      console.log("update");
-      const res = await updateOwnerApi.update({
+      const res = await updateOwnerApi.updateAll({
         firstName: firstName,
         lastName: lastName,
         email: email,
@@ -44,12 +42,7 @@ export default function ProfileScreen() {
       });
       console.warn("first name updated:", firstName);
       console.log("res: ", res.data);
-      setVehicleOwner({
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        password: password
-      });
+
       Alert.alert("Done");
     } catch (error) {
       console.log("error: ", error);

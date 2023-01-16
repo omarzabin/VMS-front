@@ -4,34 +4,33 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import Alert from "./Alert";
 import { ScrollView } from "react-native-gesture-handler";
 import { AlertsApi } from "../../../api/AxiosApi";
-
+import { useAtom } from "jotai";
+import { deviceIMEIAtom } from "../../store/userStore";
 import { useNavigation } from "@react-navigation/native";
 export default function AlertsScreen() {
+  const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
+
   const [refresh, setRefresh] = useState(false);
-
-  const pull = () => {
-    setRefresh(true);
-    setTimeout(() => {
-      setRefresh(false);
-    }, 4000);
-  };
-
   const [data, setData] = useState([]);
   const navigation = useNavigation();
+
   const getAlerts = async () => {
     try {
-      const { data } = await AlertsApi.get();
+      const { data } = await AlertsApi.get(deviceImEI);
       setData(data);
-      //console.log("data:", data);
     } catch (error) {
       console.log("error", JSON.stringify(error));
     }
   };
-
+  const pull = () => {
+    setRefresh(true);
+    setTimeout(() => {
+      getAlerts();
+      setRefresh(false);
+    }, 2000);
+  };
   useEffect(() => {
     getAlerts();
-
-    //console.log("time:", data.map(item => (item = item.gpsTime.split("T")[1])));
   }, []);
 
   return (
@@ -43,7 +42,6 @@ export default function AlertsScreen() {
           refreshing={refresh}
           onRefresh={() => {
             pull();
-            getAlerts();
           }}
         />
       }
@@ -54,7 +52,7 @@ export default function AlertsScreen() {
           long={item.longitude}
           lat={item.latitude}
           time={
-            "Alert Date: " +
+            "In: " +
             item.gpsTime.split("T")[0] +
             " At: " +
             item.gpsTime.split("T")[1]
@@ -63,6 +61,8 @@ export default function AlertsScreen() {
           vehicleIGN={item.vehicleIGN}
           addressAr={item.addressAr}
           pNumber="37-26283"
+          extProp={item.extendedProperties}
+          //locationId={item.locationId}
         />
       )}
     </ScrollView>

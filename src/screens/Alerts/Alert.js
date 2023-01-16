@@ -1,100 +1,293 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { alertLocationAtom } from "../../store/userStore";
+import { alertsDecoder } from "../../AlertsKeyValue";
+import { ScrollView } from "react-native-gesture-handler";
 export default function Alert({
-  time,
+  time = "",
   temp,
   long,
   lat,
   speed,
   vehicleIGN,
   addressAr,
-  pNumber
+  pNumber,
+  extProp,
+  isScrollable = false,
+  locationId
 }) {
   const navigation = useNavigation();
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
+  const [extendedProperty, setExtendedProperty] = useState([]);
+
+  useEffect(() => {
+    const extendedPropertiesParsed = JSON.parse(extProp);
+    if (extendedPropertiesParsed) {
+      const keys = Object.keys(extendedPropertiesParsed);
+      const tempArr = keys
+        .map(key => {
+          return {
+            decoded: alertsDecoder(parseInt(key)), // battery level
+            value: extendedPropertiesParsed[key] // 89
+          };
+        })
+        .filter(
+          item => item.decoded !== undefined && item.decoded !== "Ignition"
+        );
+      setExtendedProperty(tempArr);
+    }
+  }, []);
+
   return (
-    <View style={styles.root}>
-      <TouchableOpacity
-        onPress={() => {
-          setMarkerLocation({ long: long, lat: lat });
-          navigation.navigate("Home");
-        }}
-      >
-        <View style={styles.body}>
-          <View style={{ alignItems: "flex-end" }}>
-            <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }}>
-              {time}
-            </Text>
-          </View>
-          <View style={styles.dataContainer}>
-            <Text style={styles.headerText}>Plate Number</Text>
-            <Text style={styles.address}>
-              {pNumber}
-            </Text>
-          </View>
+    <View style={temp < 101 ? styles.root : styles.rootRed}>
+      {isScrollable
+        ? <ScrollView>
+            <View style={styles.body}>
+              <View style={{ alignItems: "flex-end" }}>
+                <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }}>
+                  {time ? time : ""}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.headerText}>Plate Number</Text>
+                <Text style={styles.address}>
+                  {pNumber ? pNumber : ""}
+                </Text>
+              </View>
 
-          <View>
-            <View style={styles.headerWrapper}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>Alert</Text>
-              <Text>high temp</Text>
-            </View>
-            <View style={{ flexDirection: "row", marginBottom: 5 }}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>Temp:</Text>
-              <Text>
-                {temp}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", marginBottom: 5 }}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>Long:</Text>
-              <Text>
-                {long.toFixed(5)}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", marginBottom: 5 }}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>Lat:</Text>
-              <Text>
-                {lat.toFixed(5)}
-              </Text>
-            </View>
+              <View>
+                <View style={styles.headerWrapper}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Alert
+                  </Text>
+                  <Text>high temp</Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Temp:
+                  </Text>
+                  <Text>
+                    {temp ? temp : ""}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Long:
+                  </Text>
+                  <Text>
+                    {long ? long.toFixed(5) : ""}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Lat:
+                  </Text>
+                  <Text>
+                    {lat ? lat.toFixed(5) : ""}
+                  </Text>
+                </View>
 
-            <View style={{ flexDirection: "row", marginBottom: 5 }}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>Speed:</Text>
-              <Text>
-                {speed}
-              </Text>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Speed:
+                  </Text>
+                  <Text>
+                    {speed ? speed : ""}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    VehicleIGN:
+                  </Text>
+                  {vehicleIGN
+                    ? vehicleIGN
+                    : "" ? <Text> On </Text> : <Text> Off</Text>}
+                </View>
+                <View style={{ flexDirection: "column", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    AddressAr:
+                  </Text>
+                  <Text>
+                    {addressAr ? addressAr : ""}
+                  </Text>
+                </View>
+                {extendedProperty.map(item =>
+                  <View style={{ flexDirection: "column", marginBottom: 5 }}>
+                    <Text
+                      style={{
+                        marginRight: 5,
+                        fontWeight: "700"
+                      }}
+                    >
+                      {item.decoded}
+                    </Text>
+                    <Text>
+                      {valuesDecoder(item)}
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
-            <View style={{ flexDirection: "row", marginBottom: 5 }}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>
-                VehicleIGN:
-              </Text>
-              {vehicleIGN ? <Text> On </Text> : <Text> Off</Text>}
+          </ScrollView>
+        : <TouchableOpacity
+            onPress={() => {
+              setMarkerLocation({ long: long, lat: lat });
+              navigation.navigate("Home", {
+                time,
+                temp,
+                long,
+                lat,
+                speed,
+                vehicleIGN,
+                addressAr,
+                pNumber,
+                extProp,
+                isScrollable,
+                locationId
+              });
+            }}
+          >
+            <View style={styles.body}>
+              <View style={{ alignItems: "flex-end" }}>
+                <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }}>
+                  {time ? time : ""}
+                </Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.headerText}>Plate Number</Text>
+                <Text style={styles.address}>
+                  {pNumber ? pNumber : ""}
+                </Text>
+              </View>
+
+              <View>
+                <View style={styles.headerWrapper}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Alert
+                  </Text>
+                  <Text>high temp</Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Temp:
+                  </Text>
+                  <Text>
+                    {temp ? temp : ""}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Long:
+                  </Text>
+                  <Text>
+                    {long ? long.toFixed(5) : ""}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Lat:
+                  </Text>
+                  <Text>
+                    {lat ? lat.toFixed(5) : ""}
+                  </Text>
+                </View>
+
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    Speed:
+                  </Text>
+                  <Text>
+                    {speed ? speed : ""}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    VehicleIGN:
+                  </Text>
+                  {vehicleIGN
+                    ? vehicleIGN
+                    : "" ? <Text> On </Text> : <Text> Off</Text>}
+                </View>
+                <View style={{ flexDirection: "column", marginBottom: 5 }}>
+                  <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                    AddressAr:
+                  </Text>
+                  <Text>
+                    {addressAr ? addressAr : ""}
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Alert Details")}
+                  >
+                    <Text
+                      style={{
+                        alignSelf: "flex-end",
+                        paddingTop: 10,
+                        textDecorationLine: "underline"
+                      }}
+                    >
+                      more details
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {/* {extendedProperty.map(item =>
+                  <View style={{ flexDirection: "column", marginBottom: 5 }}>
+                    <Text
+                      style={{
+                        marginRight: 5,
+                        fontWeight: "700"
+                      }}
+                    >
+                      {item.decoded}
+                    </Text>
+                    <Text>
+                      {valuesDecoder(item)}
+                    </Text>
+                  </View>
+                )} */}
+              </View>
             </View>
-            <View style={{ flexDirection: "column", marginBottom: 5 }}>
-              <Text style={{ marginRight: 5, fontWeight: "700" }}>
-                AddressAr:
-              </Text>
-              <Text>
-                {addressAr}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+          </TouchableOpacity>}
     </View>
   );
 }
 
+const valuesDecoder = item => {
+  if (item.decoded === "Ignition") return item.value === 0 ? "Off" : "On";
+  else if (item.decoded === "Movement")
+    return item.value === 0 ? "Idle" : "Moving";
+  else if (item.decoded === "Towing")
+    return item.value === 0 ? "Not being towed" : "Being towed";
+  else if (item.decoded === "Unplug")
+    return item.value === 0 ? "Device is connected" : "Device is not connected";
+  else if (item.decoded === "Sleep Mode")
+    return item.value !== 0 ? "Vehicle is moving" : "Vehicle is not moving";
+  else
+    // else if item.value >=
+    return item.value;
+};
+
 const styles = EStyleSheet.create({
   root: {
     backgroundColor: "white",
+    borderTopColor: "#38A169",
+    borderTopWidth: 5,
     marginHorizontal: "1rem",
     marginVertical: "0.5rem",
-    borderWidth: 0.5,
-    borderColor: "black",
+    borderRadius: 8,
+    padding: "0.7rem"
+  },
+
+  rootRed: {
+    backgroundColor: "white",
+    borderTopColor: "#E53E3E",
+    borderTopWidth: 5,
+    marginHorizontal: "1rem",
+    marginVertical: "0.5rem",
     borderRadius: 8,
     padding: "0.7rem"
   },
