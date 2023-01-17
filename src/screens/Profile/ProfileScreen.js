@@ -74,7 +74,7 @@ export default function ProfileScreen() {
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Email :
         </Text>
-        {console.log(email)}
+
         <CustomInput value={email} setValue={setEmail} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
