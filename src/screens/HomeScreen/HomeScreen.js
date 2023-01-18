@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import { AlertsApi } from "../../../api/AxiosApi";
+import { AlertsApi, vehicleApi } from "../../../api/AxiosApi";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { ScrollView } from "react-native-gesture-handler";
@@ -14,15 +14,17 @@ import {
 import Alert from "../Alerts/Alert";
 export default function HomeScreen({ route, navigation }) {
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
-  const [VehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
+  const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
   const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
+
+  const [vehicle, setVehicle] = useState("");
 
   //const [date, setDate] = useState(new Date());
   const [alertData, setAlertData] = useState([]);
 
   const [selected, setSelected] = useState("");
 
-  const data = [{ key: "1", value: "Camry" }, { key: "2", value: "Accord" }];
+  const data = [{ key: "1", value: vehicle.vehicleModel }];
 
   const getLatestAlert = async () => {
     try {
@@ -32,12 +34,30 @@ export default function HomeScreen({ route, navigation }) {
       console.log("error", JSON.stringify(error));
     }
   };
-  useEffect(() => {
-    getLatestAlert();
-  }, []);
+
+  const geVehicle = async () => {
+    try {
+      const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
+      setVehicle(res.data[0]);
+      console.log("vehicle: ", vehicle);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+    }
+  };
+  useEffect(
+    () => {
+      {
+        vehicle.vehicleId === vehicleOwner.vehicleId
+          ? getLatestAlert()
+          : geVehicle();
+      }
+    },
+    [vehicle]
+  );
 
   return (
     <View style={styles.outerContainer}>
+      {console.log("plate", vehicle.vehiclePlateNumber)}
       <View style={styles.selectListContainer}>
         <SelectList
           setSelected={val => setSelected(val)}
@@ -62,7 +82,7 @@ export default function HomeScreen({ route, navigation }) {
             speed={item.speed === 0 ? "0" : item.speed}
             vehicleIGN={item.vehicleIGN}
             addressAr={item.addressAr}
-            pNumber="37-26283"
+            pNumber={vehicle.vehiclePlateNumber}
             extProp={item.extendedProperties}
             isScrollable
             //locationId={item.locationId}

@@ -1,7 +1,12 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../../Components/CustomButton/CustomButton";
-import { vehicleApi, updateOwnerApi } from "../../../api/AxiosApi";
+import {
+  vehicleApi,
+  updateOwnerApi,
+  VehicleRegistrationApi,
+  insuranceApi
+} from "../../../api/AxiosApi";
 import CustomInput from "../../Components/CustomInput/CustomInput";
 import { ScrollView } from "react-native-gesture-handler";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -26,10 +31,10 @@ export default function AddNewVehiclesScreen() {
   const [modelOptions, setModelOptions] = useState([]);
 
   const [vehicleManufactureYear, setVehicleManufactureYear] = useState();
-  const [plateNumber, setPlateNumber] = useState();
+  const [vehiclePlateNumber, setVehiclePlateNumber] = useState();
   const [vehicleColor, setVehicleColor] = useState();
-  const [vClassification, setVClassification] = useState();
-  const [insuranceTy, setInsuranceTy] = useState();
+  // const [vClassification, setVClassification] = useState();
+  // const [insuranceTy, setInsuranceTy] = useState();
   const [deviceIMEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
   const [expiryDateReg, setExpiryDateReg] = useState();
   const [expiryDateIns, setExpiryDateIns] = useState();
@@ -42,12 +47,12 @@ export default function AddNewVehiclesScreen() {
 
   const addVehicleInfo = async () => {
     try {
-      const regId = await vehicleApi.addRegistration({
+      const regId = await VehicleRegistrationApi.addRegistration({
         vehicleClassification: checkedRs,
         expiryDate: new Date(expiryDateReg)
       });
       console.log(regId.data);
-      const insId = await vehicleApi.addInsurance({
+      const insId = await insuranceApi.addInsurance({
         insuranceTy: checkedIs,
         expiryDate: new Date(expiryDateIns)
       });
@@ -63,7 +68,7 @@ export default function AddNewVehiclesScreen() {
             )
           ].value,
         VehicleManufactureYear: Number(vehicleManufactureYear),
-        plateNumber: plateNumber,
+        vehiclePlateNumber: String(vehiclePlateNumber),
         vehicleColor: vehicleColor,
         regId: regId.data,
         insId: insId.data,
@@ -75,6 +80,8 @@ export default function AddNewVehiclesScreen() {
         vehicleOwner.ownerId,
         vId.data
       );
+      const temp = { ...vehicleOwner, vehicleId: vId };
+      setVehicleOwner(temp);
       setFirstTime(false);
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -122,6 +129,7 @@ export default function AddNewVehiclesScreen() {
       style={{ backgroundColor: "#f0f9ff" }}
       showsVerticalScrollIndicator={false}
     >
+      {console.log("owner", vehicleOwner)}
       <Text
         style={{
           fontSize: 18,
@@ -162,7 +170,12 @@ export default function AddNewVehiclesScreen() {
           </View>
           <View style={styles.innerContainer}>
             <Text style={styles.headerText}>Vehicle Plate Number</Text>
-            <CustomInput value={plateNumber} setValue={setPlateNumber} />
+            {console.log("plate", vehiclePlateNumber)}
+            <CustomInput
+              placeholder={"xx-xxxxx"}
+              value={vehiclePlateNumber}
+              setValue={setVehiclePlateNumber}
+            />
           </View>
           <View style={styles.innerContainer}>
             <Text style={styles.headerText}>Vehicle Color</Text>
@@ -170,11 +183,7 @@ export default function AddNewVehiclesScreen() {
           </View>
           <View style={styles.innerContainer}>
             <Text style={styles.headerText}>Device IMEI</Text>
-            <CustomInput
-              value={deviceIMEI}
-              setValue={setDeviceIMEI}
-              keyboardType="numeric"
-            />
+            <CustomInput setValue={setDeviceIMEI} keyboardType="numeric" />
           </View>
         </View>
         <Text style={styles.mainText}>Vehicle Registration</Text>
@@ -281,7 +290,7 @@ export default function AddNewVehiclesScreen() {
           </View>
         </View>
         <View style={{ justifyContent: "center", paddingHorizontal: 60 }}>
-          <CustomButton text="Add Vehicle" onPress={() => save} />
+          <CustomButton text="Add Vehicle" onPress={save} />
         </View>
       </View>
     </ScrollView>

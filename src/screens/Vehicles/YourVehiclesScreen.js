@@ -4,7 +4,11 @@ import { useAtom } from "jotai";
 import { vehicleOwnerAtom } from "../../store/userStore";
 import CustomInput from "../../Components/CustomInput/CustomInput";
 import { ScrollView } from "react-native-gesture-handler";
-import { vehicleApi } from "../../../api/AxiosApi";
+import {
+  vehicleApi,
+  VehicleRegistrationApi,
+  insuranceApi
+} from "../../../api/AxiosApi";
 
 export default function YourVehiclesScreen() {
   // testing readio button
@@ -13,12 +17,12 @@ export default function YourVehiclesScreen() {
 
   const [vehicle, setVehicle] = useState([{}]);
   const [registration, setRegistration] = useState([{}]);
+  const [insurance, setInsurance] = useState([{}]);
 
   const geVehicle = async () => {
     try {
       const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
       setVehicle(res.data);
-      getRegistration();
       // console.log("vehicle: ", vehicle);
     } catch (error) {
       console.log("error", JSON.stringify(error));
@@ -27,16 +31,36 @@ export default function YourVehiclesScreen() {
 
   const getRegistration = async () => {
     try {
-      const reg = await vehicleApi.getRegistration(vehicle[0].regId);
+      const reg = await VehicleRegistrationApi.getRegistration(
+        vehicle[0].regId
+      );
       setRegistration(reg.data);
       // console.log("reg info:", reg.data);
     } catch (error) {
       //console.log("error", JSON.stringify(error));
     }
   };
-  useEffect(() => {
-    geVehicle();
-  }, []);
+
+  const getInsurance = async () => {
+    try {
+      const ins = await insuranceApi.getInsurance(vehicle[0].insId);
+      setInsurance(ins.data);
+      // console.log("reg info:", reg.data);
+    } catch (error) {
+      //console.log("error", JSON.stringify(error));
+    }
+  };
+  useEffect(
+    () => {
+      if (vehicle[0].vehicleId !== vehicleOwner.vehicleId) {
+        geVehicle();
+      } else {
+        getRegistration();
+        getInsurance();
+      }
+    },
+    [vehicle]
+  );
 
   return (
     <ScrollView
@@ -76,6 +100,7 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Plate Number
             </Text>
+            {console.log("plate :", vehicle[0])}
             <CustomInput value={vehicle[0].vehiclePlateNumber} />
           </View>
           <View style={styles.innerContends}>
@@ -129,7 +154,8 @@ export default function YourVehiclesScreen() {
             >
               Insurance Type
             </Text>
-            <CustomInput />
+
+            <CustomInput value={insurance[0].insuranceTy} />
           </View>
           <View>
             <Text
@@ -137,7 +163,13 @@ export default function YourVehiclesScreen() {
             >
               Expiry Date
             </Text>
-            <CustomInput />
+            <CustomInput
+              value={
+                insurance[0].expiryDate === undefined
+                  ? " "
+                  : insurance[0].expiryDate.split("T")[0]
+              }
+            />
           </View>
         </View>
       </View>

@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function AddRecordScreen() {
   const [RepairPart, setRepairPart] = useState("");
   const [Part, setPart] = useState("");
+  const [oilLife, setOilLife] = useState("");
   const [Description, setDescription] = useState("");
   const [Workshop, setWorkshop] = useState("");
   const [price, setPrice] = useState("");
@@ -38,6 +39,7 @@ export default function AddRecordScreen() {
   }
 
   const categories = [
+    { key: "Oil", value: "Oil change" },
     { key: "Battery Service", value: "Battery Service" },
     { key: "AC Cooling & Heating", value: "AC Cooling & Heating" },
     { key: "Security locking and keys", value: "Security locking and keys" },
@@ -51,57 +53,57 @@ export default function AddRecordScreen() {
   ];
   return (
     <View style={styles.root}>
-      <ScrollView>
-        <Text style={styles.title}>Maintenance Records</Text>
-        <View style={styles.container}>
-          <SelectList
-            data={categories}
-            search
-            maxHeight={200}
-            boxStyles={styles.box}
-            labelField="label"
-            valueField="value"
-            searchPlaceholder="Search..."
-            setSelected={setRepairPart}
-            placeholder={"Vehicle Repair"}
-            selected={e => setRepairPart(e)}
-          />
-          <TextInput
-            style={styles.Part}
-            placeholder={"Part"}
-            placeholderTextColor={"black"}
-            onChangeText={text => setPart(text)}
-          />
+      {/* <Text style={styles.title}>Maintenance Records</Text> */}
+      <View style={styles.container}>
+        <SelectList
+          data={categories}
+          search
+          maxHeight={200}
+          boxStyles={styles.box}
+          searchPlaceholder="Search..."
+          setSelected={setRepairPart}
+          placeholder={"Select spare part "}
+          selected={e => setRepairPart(e)}
+        />
 
-          <TextInput
-            style={styles.Description}
-            placeholder="Description :"
-            placeholderTextColor={"black"}
-            onChangeText={text => setDescription(text)}
-          />
+        {RepairPart !== "Oil"
+          ? <TextInput
+              style={styles.Part}
+              placeholder={"Part"}
+              onChangeText={text => setPart(text)}
+            />
+          : <TextInput
+              style={styles.Part}
+              placeholder={"Oil life in km"}
+              onChangeText={text => setOilLife(Number(text))}
+              keyboardType={"numeric"}
+            />}
+        <TextInput
+          style={styles.Description}
+          placeholder="Description :"
+          onChangeText={text => setDescription(text)}
+        />
 
-          <TextInput
-            style={styles.price}
-            placeholder="Price"
-            placeholderTextColor={"black"}
-            onChangeText={text => setPrice(text)}
-          />
+        <TextInput
+          style={styles.price}
+          placeholder="Price"
+          onChangeText={text => setPrice(text)}
+          keyboardType={"numeric"}
+        />
 
-          <TextInput
-            style={styles.Workshop}
-            placeholder="WorkShop"
-            placeholderTextColor={"black"}
-            onChangeText={text => setWorkshop(text)}
-          />
+        <TextInput
+          style={styles.Workshop}
+          placeholder="WorkShop"
+          onChangeText={text => setWorkshop(text)}
+        />
 
-          <CustomButton
-            style={styles.button}
-            text="Submit"
-            type="submit"
-            onPress={OnSubmit}
-          />
-        </View>
-      </ScrollView>
+        <CustomButton
+          style={styles.button}
+          text="Submit"
+          type="submit"
+          onPress={OnSubmit}
+        />
+      </View>
     </View>
   );
 }
@@ -109,8 +111,8 @@ export default function AddRecordScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "lightblue",
-    marginTop: 20
+    backgroundColor: "#a8cbe6",
+    paddingTop: 80
   },
   title: {
     fontSize: 24,

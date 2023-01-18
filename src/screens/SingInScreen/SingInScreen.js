@@ -46,12 +46,6 @@ export default function SignInScreen({ navigation }) {
       });
       console.log("owner data: ", owner.data);
       setVehicleOwner(owner.data);
-      /*firstName: owner.data.firstName,
-        lastName: owner.data.lastName,
-        email: owner.data.Email,
-        password: owner.data.Password,
-        ownerId: owner.data.ownerId,
-        vehicleId: owner.data.vehicleId*/
 
       console.log("vehicleOWner :", vehicleOwner);
       const deviceIMEI = await authApi.getDeviseIMEI({

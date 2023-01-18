@@ -49,14 +49,15 @@ export default function SignUpScreen() {
       setFirstTime(true);
 
       setVehicleOwner({
+        ownerId: res.data,
         firstName: data.FirstName,
         lastName: data.LastName,
         email: data.Email,
         password: data.Password,
-        ownerId: res.data,
         vehicleId: 0
       });
-      console.log("VehicleOwner:", vehicleOwner);
+      console.log("VehicleOwner:", res.data);
+      console.log("owner", vehicleOwner);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
