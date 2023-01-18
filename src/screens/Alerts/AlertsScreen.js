@@ -3,15 +3,18 @@ import React, { useEffect, useState } from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
 import Alert from "./Alert";
 import { ScrollView } from "react-native-gesture-handler";
-import { AlertsApi } from "../../../api/AxiosApi";
+import { AlertsApi, vehicleApi } from "../../../api/AxiosApi";
 import { useAtom } from "jotai";
-import { deviceIMEIAtom } from "../../store/userStore";
+import { deviceIMEIAtom, vehicleOwnerAtom } from "../../store/userStore";
 import { useNavigation } from "@react-navigation/native";
 export default function AlertsScreen() {
   const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
 
+  const [vehicleOwner] = useAtom(vehicleOwnerAtom);
+
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const [vehiclePlateNumber, setVehiclePlateNumber] = useState("");
   const navigation = useNavigation();
 
   const getAlerts = async () => {
@@ -22,6 +25,18 @@ export default function AlertsScreen() {
       console.log("error", JSON.stringify(error));
     }
   };
+  const geVehicle = async () => {
+    try {
+      const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
+
+      setVehiclePlateNumber(res.data[0].vehiclePlateNumber);
+
+      // console.log("vehicle: ", vehicle);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+    }
+  };
+
   const pull = () => {
     setRefresh(true);
     setTimeout(() => {
@@ -29,9 +44,13 @@ export default function AlertsScreen() {
       setRefresh(false);
     }, 2000);
   };
-  useEffect(() => {
-    getAlerts();
-  }, []);
+  useEffect(
+    () => {
+      geVehicle();
+      getAlerts();
+    },
+    [vehiclePlateNumber]
+  );
 
   return (
     <ScrollView
@@ -60,8 +79,9 @@ export default function AlertsScreen() {
           speed={item.speed}
           vehicleIGN={item.vehicleIGN}
           addressAr={item.addressAr}
-          pNumber="37-26283"
+          pNumber={vehiclePlateNumber}
           extProp={item.extendedProperties}
+
           //locationId={item.locationId}
         />
       )}

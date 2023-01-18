@@ -3,8 +3,10 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Alert from "./Alert";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useAtom } from "jotai";
+import { vehicleOwnerAtom } from "../../store/userStore";
 
-const AlertDetails = () => {
+const AlertDetails = ({ rout, prams }) => {
   const navigation = useNavigation();
   return (
     <View>

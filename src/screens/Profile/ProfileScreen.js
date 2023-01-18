@@ -6,12 +6,12 @@ import {
   ScrollView,
   Alert
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SpatialButton from "../../Components/SpatialButton/SpatialButton";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import SpatialInput from "../../Components/SpatialInput/SpatialInput";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { vehicleOwnerAtom } from "../../store/userStore";
 import { useAtom } from "jotai";
 import CustomInput from "../../Components/CustomInput/CustomInput";
@@ -19,17 +19,29 @@ import { updateOwnerApi } from "../../../api/AxiosApi";
 
 export default function ProfileScreen() {
   const { control, handleSubmit, watch } = useForm();
+  const passwd_confirm = watch("NewPassword");
+  const [showChangePass, setShowChangePass] = useState(false);
+
   const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
 
   const [email, setEmail] = useState(vehicleOwner.email);
   const [firstName, setFirstName] = useState(vehicleOwner.firstName);
   const [lastName, setLastName] = useState(vehicleOwner.lastName);
-  const [password, setPassword] = useState(vehicleOwner.password);
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState();
 
-  function save() {
-    updateVehicleOwnerInfo();
+  useEffect(() => {
+    setShowChangePass(false);
+  }, []);
+
+  function save(data) {
+    if (currentPassword === "") updateVehicleOwnerInfo();
+    else {
+      if (currentPassword != vehicleOwner.password)
+        Alert.alert("Current password is incorrect");
+      else updateVehicleOwnerPass(data);
+    }
   }
 
   const updateVehicleOwnerInfo = async () => {
@@ -38,9 +50,29 @@ export default function ProfileScreen() {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        password: password,
+        password: vehicleOwner.password,
         ownerId: vehicleOwner.ownerId
       });
+      console.warn("first name updated:", firstName);
+      console.log("res: ", res.data);
+
+      Alert.alert("Done");
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+  const updateVehicleOwnerPass = async data => {
+    try {
+      const res = await updateOwnerApi.updateAll({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: data.NewPassword,
+        ownerId: vehicleOwner.ownerId
+      });
+      setShowChangePass(false);
+      setVehicleOwner({ password: data.NewPassword });
+      console.log("new pass for atom:", vehicleOwner);
       console.warn("first name updated:", firstName);
       console.log("res: ", res.data);
 
@@ -52,6 +84,7 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      {console.log("owner: ", vehicleOwner)}
       <View>
         <Text
           style={{
@@ -63,13 +96,12 @@ export default function ProfileScreen() {
         >
           First Name :
         </Text>
-
         <CustomInput value={firstName} setValue={setFirstName} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Last Name :
         </Text>
-        <CustomInput value={lastName} setValue={setLastName} />
+        <CustomInput value={vehicleOwner.lastName} setValue={setLastName} />
 
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Email :
@@ -80,30 +112,61 @@ export default function ProfileScreen() {
         <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
           Current password :
         </Text>
-        <CustomInput setValue={setPassword} placeholder="" />
-
-        <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
-          New Password :
-        </Text>
-        <SpatialInput
-          name={"New-Password"}
-          control={control}
+        <CustomInput
+          setValue={setCurrentPassword}
           placeholder=""
-          secureTextEntry={true}
+          onEndEditing={() => {
+            currentPassword === vehicleOwner.password
+              ? setShowChangePass(true)
+              : setShowChangePass(false);
+          }}
+          secureTextEntry
         />
 
-        <Text style={{ alignSelf: "stretch", padding: 10, fontWeight: "500" }}>
-          Confirm New Password :
+        {showChangePass
+          ? <SpatialInput
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password should be Minimum 8 characters Long"
+                }
+              }}
+              name={"NewPassword"}
+              control={control}
+              placeholder="New Password"
+              secureTextEntry={true}
+            />
+          : null}
+        {showChangePass
+          ? <SpatialInput
+              rules={{
+                required: "Confirm Pass is required",
+                validate: value =>
+                  value === passwd_confirm || "password not match"
+              }}
+              name={"ConfirmPassword"}
+              control={control}
+              placeholder="Confirm Password"
+              secureTextEntry={true}
+            />
+          : null}
+        {!showChangePass
+          ? <View style={styles.button}>
+              <SpatialButton text="Save Changes" onPress={save} type="save" />
+            </View>
+          : <View style={styles.button}>
+              <SpatialButton
+                text="Change Password "
+                onPress={handleSubmit(save)}
+                type="save"
+              />
+            </View>}
+      </View>
+      <View>
+        <Text style={{ paddingLeft: 10, color: "#ff9966" }}>
+          * to change password enter current password
         </Text>
-        <SpatialInput
-          name={"Confirm-New-Password"}
-          control={control}
-          placeholder=""
-          secureTextEntry={true}
-        />
-        <View style={styles.button}>
-          <SpatialButton text="Save Changes  " onPress={save} type="save" />
-        </View>
       </View>
     </ScrollView>
   );
@@ -114,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     flex: 1,
-    backgroundColor: "#e8e8e8"
+    backgroundColor: "#a8cbe6"
   },
   title: {
     fontSize: 24,

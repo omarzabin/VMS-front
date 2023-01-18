@@ -22,6 +22,8 @@ export default function Alert({
   const navigation = useNavigation();
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
   const [extendedProperty, setExtendedProperty] = useState([]);
+  const { alertTy, setAlertTy } = useState();
+  const [vehiclePlateNumber, setVehiclePlateNumber] = useState("");
 
   useEffect(() => {
     const extendedPropertiesParsed = JSON.parse(extProp);
@@ -34,9 +36,7 @@ export default function Alert({
             value: extendedPropertiesParsed[key] // 89
           };
         })
-        .filter(
-          item => item.decoded !== undefined && item.decoded !== "Ignition"
-        );
+        .filter(item => item.decoded !== undefined);
       setExtendedProperty(tempArr);
     }
   }, []);
@@ -95,17 +95,16 @@ export default function Alert({
                     Speed:
                   </Text>
                   <Text>
-                    {speed ? speed : ""}
+                    {speed ? speed : "0"}
                   </Text>
                 </View>
-                <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                {/* <View style={{ flexDirection: "row", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     VehicleIGN:
                   </Text>
-                  {vehicleIGN
-                    ? vehicleIGN
-                    : "" ? <Text> On </Text> : <Text> Off</Text>}
-                </View>
+                  {console.log("ign:", vehicleIGN)}
+                  {vehicleIGN ? <Text> On </Text> : <Text> Off</Text>}
+                </View> */}
                 <View style={{ flexDirection: "column", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     AddressAr:
@@ -168,7 +167,9 @@ export default function Alert({
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     Alert
                   </Text>
-                  <Text>high temp</Text>
+                  <Text>
+                    {alertTy}
+                  </Text>
                 </View>
                 <View style={{ flexDirection: "row", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
@@ -200,16 +201,14 @@ export default function Alert({
                     Speed:
                   </Text>
                   <Text>
-                    {speed ? speed : ""}
+                    {speed ? speed : "0"}
                   </Text>
                 </View>
                 <View style={{ flexDirection: "row", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     VehicleIGN:
                   </Text>
-                  {vehicleIGN
-                    ? vehicleIGN
-                    : "" ? <Text> On </Text> : <Text> Off</Text>}
+                  {vehicleIGN ? <Text> On </Text> : <Text> Off</Text>}
                 </View>
                 <View style={{ flexDirection: "column", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
@@ -257,15 +256,19 @@ export default function Alert({
 }
 
 const valuesDecoder = item => {
-  if (item.decoded === "Ignition") return item.value === 0 ? "Off" : "On";
-  else if (item.decoded === "Movement")
+  if (item.decoded === "Ignition") return item.value ? "On" : "Off";
+  else if (item.decoded === "Movement") {
     return item.value === 0 ? "Idle" : "Moving";
-  else if (item.decoded === "Towing")
+  } else if (item.decoded === "Towing")
     return item.value === 0 ? "Not being towed" : "Being towed";
   else if (item.decoded === "Unplug")
     return item.value === 0 ? "Device is connected" : "Device is not connected";
   else if (item.decoded === "Sleep Mode")
-    return item.value !== 0 ? "Vehicle is moving" : "Vehicle is not moving";
+    return item.value === 0 ? "Vehicle is moving" : "Vehicle is not moving";
+  else if (item.decoded === "Engine Oil Temperature") {
+    return (temp = item.value);
+  } else if (item.decoded === "Total Odometer") return item.value + " km";
+  else if (item.decoded === "Battery Level") return item.value + " %";
   else
     // else if item.value >=
     return item.value;
