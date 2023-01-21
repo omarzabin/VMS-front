@@ -12,7 +12,7 @@ import {
 
 export default function YourVehiclesScreen() {
   // testing readio button
-
+  //
   const [vehicleOwner] = useAtom(vehicleOwnerAtom);
 
   const [vehicle, setVehicle] = useState([{}]);
@@ -21,45 +21,62 @@ export default function YourVehiclesScreen() {
 
   const geVehicle = async () => {
     try {
-      const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
-      setVehicle(res.data);
-      // console.log("vehicle: ", vehicle);
+      const vehicleRes = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
     } catch (error) {
       console.log("error", JSON.stringify(error));
     }
   };
-
-  const getRegistration = async () => {
+  const getRegistrationLocal = async () => {
     try {
-      const reg = await VehicleRegistrationApi.getRegistration(
-        vehicle[0].regId
-      );
-      setRegistration(reg.data);
-      // console.log("reg info:", reg.data);
-    } catch (error) {
-      //console.log("error", JSON.stringify(error));
-    }
+      const reg = await VehicleRegistrationApi.getRegistration(vehicle.regId);
+    } catch (error) {}
   };
 
-  const getInsurance = async () => {
+  const getInsuranceLocal = async () => {
     try {
-      const ins = await insuranceApi.getInsurance(vehicle[0].insId);
+      const ins = await insuranceApi.getInsurance(vehicle.insId);
       setInsurance(ins.data);
       // console.log("reg info:", reg.data);
     } catch (error) {
       //console.log("error", JSON.stringify(error));
     }
   };
+  const fetchData = async () => {
+    try {
+      const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
+      console.log("vehRes: ", res.data[0].regId);
+      setVehicle(res.data);
+
+      const reg = await VehicleRegistrationApi.getRegistration(
+        res.data[0].regId
+      );
+      const ins = await insuranceApi.getInsurance(res.data[0].insId);
+
+      console.log("vehicle:", res.data);
+
+      console.log("reg:", reg.data);
+
+      console.log("ins:", ins.data);
+
+      setRegistration(reg.data);
+      setInsurance(ins.data);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+    }
+  };
+
   useEffect(
     () => {
-      if (vehicle[0].vehicleId !== vehicleOwner.vehicleId) {
-        geVehicle();
+      if (vehicle[0].vehicleId === undefined) {
+        fetchData();
+        console.log("vehicle: ", vehicle);
+        console.log("reg: ", registration);
+        console.log("ins: ", insurance);
       } else {
-        getRegistration();
-        getInsurance();
+        console.log("first");
       }
     },
-    [vehicle]
+    [insurance]
   );
 
   return (
@@ -76,7 +93,7 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Automaker
             </Text>
-            <CustomInput value={vehicle[0].vehicleAutomaker} />
+            <CustomInput value={vehicle[0].vehicleAutomaker} editable={false} />
           </View>
           <View style={styles.innerContends}>
             <Text
@@ -100,7 +117,6 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Plate Number
             </Text>
-            {console.log("plate :", vehicle[0])}
             <CustomInput value={vehicle[0].vehiclePlateNumber} />
           </View>
           <View style={styles.innerContends}>
