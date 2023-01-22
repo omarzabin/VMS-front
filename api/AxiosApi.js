@@ -81,5 +81,11 @@ export const recordsApi = {
   getRecord: vehicleId => {
     console.log("calling get record", vehicleId);
     return axios.get(`RepairRecords/${vehicleId}`);
+  },
+  getLatestRecord: (vehicleId, partName) => {
+    console.log("calling get record", vehicleId, partName);
+    return axios.get(
+      `RepairRecords/latest?vehicleId=${vehicleId}&pName=${partName}`
+    );
   }
 };

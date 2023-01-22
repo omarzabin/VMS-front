@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import { AlertsApi, vehicleApi } from "../../../api/AxiosApi";
+import {
+  AlertsApi,
+  vehicleApi,
+  VehicleRegistrationApi,
+  insuranceApi,
+  recordsApi
+} from "../../../api/AxiosApi";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { ScrollView } from "react-native-gesture-handler";
@@ -13,24 +19,52 @@ import {
 } from "../../store/userStore";
 import Alert from "../Alerts/Alert";
 import Table from "../../Components/Table/Table";
+import { and } from "react-native-reanimated";
 export default function HomeScreen({ route, navigation }) {
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
   const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
   const [deviceIMEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
 
   const [vehicle, setVehicle] = useState("");
-
-  //const [date, setDate] = useState(new Date());
   const [alertData, setAlertData] = useState([]);
+  const [registration, setRegistration] = useState([{}]);
+  const [insurance, setInsurance] = useState([{}]);
+  const [recordData, setRecordData] = useState([]);
 
   const [selected, setSelected] = useState("");
 
   const data = [{ key: "1", value: vehicle.vehicleModel }];
 
+  const fetchData = async () => {
+    try {
+      const { data } = await AlertsApi.getLatest(deviceIMEI);
+      setAlertData(data);
+
+      const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
+      setVehicle(res.data[0]);
+
+      const reg = await VehicleRegistrationApi.getRegistration(
+        res.data[0].regId
+      );
+      const ins = await insuranceApi.getInsurance(res.data[0].insId);
+      setRegistration(reg.data);
+      setInsurance(ins.data);
+
+      const reco = await recordsApi.getLatestRecord(
+        vehicleOwner.vehicleId,
+        "oil"
+      );
+      setRecordData(reco.data);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+    }
+  };
+
   const getLatestAlert = async () => {
     try {
       const { data } = await AlertsApi.getLatest(deviceIMEI);
       setAlertData(data);
+      console.log(data);
     } catch (error) {
       console.log("error", JSON.stringify(error));
     }
@@ -46,13 +80,26 @@ export default function HomeScreen({ route, navigation }) {
   };
   useEffect(
     () => {
-      {
-        vehicle.vehicleId === vehicleOwner.vehicleId
-          ? getLatestAlert()
-          : geVehicle();
+      if (
+        vehicle !== undefined &&
+        alertData !== undefined &&
+        registration !== undefined &&
+        insurance !== undefined
+      ) {
+        fetchData();
+      } else {
+        console.log("vehicle", vehicle);
+        console.log("alert", alertData);
+        console.log("reg: ", registration);
+        console.log("ins: ", insurance);
+        console.log("recourd", recordData);
       }
     },
-    [vehicle, markerLocation]
+    []
+    // () => {
+    //   getLatestAlert();
+    // },
+    // []
   );
 
   return (
@@ -69,30 +116,55 @@ export default function HomeScreen({ route, navigation }) {
           />
         </View>
         <View style={{ paddingHorizontal: 13 }}>
-          <Table />
+          <Table
+            regExpDate={
+              registration[0].expiryDate === undefined
+                ? " soon "
+                : registration[0].expiryDate.split("T")[0]
+            }
+            insExpDate={
+              insurance[0].expiryDate === undefined
+                ? " soon ins "
+                : insurance[0].expiryDate.split("T")[0]
+            }
+            nextOilChang={
+              recordData[0] !== undefined
+                ? recordData[0].oilLife +
+                  Number(alertData[0].odometer.toFixed(3)) +
+                  " km"
+                : 0
+            }
+            currentOdometer={
+              alertData[0] !== undefined
+                ? alertData[0].odometer.toFixed(3) + " km"
+                : 0
+            }
+          />
         </View>
 
         <View style={{ maxHeight: 300 }}>
-          {alertData.map(item =>
-            <Alert
-              temp={100}
-              long={item.longitude}
-              lat={item.latitude}
-              time={
-                "In: " +
-                item.gpsTime.split("T")[0] +
-                " At: " +
-                item.gpsTime.split("T")[1]
-              }
-              speed={item.speed}
-              vehicleIGN={item.vehicleIGN}
-              addressAr={item.addressAr}
-              pNumber={vehicle.vehiclePlateNumber}
-              extProp={item.extendedProperties}
-              isScrollable
-              //locationId={item.locationId}
-            />
-          )}
+          {alertData !== undefined
+            ? alertData.map(item =>
+                <Alert
+                  temp={100}
+                  long={item.longitude}
+                  lat={item.latitude}
+                  time={
+                    "In: " +
+                    item.gpsTime.split("T")[0] +
+                    " At: " +
+                    item.gpsTime.split("T")[1]
+                  }
+                  speed={item.speed}
+                  vehicleIGN={item.vehicleIGN}
+                  addressAr={item.addressAr}
+                  pNumber={vehicle.vehiclePlateNumber}
+                  extProp={item.extendedProperties}
+                  isScrollable
+                  //locationId={item.locationId}
+                />
+              )
+            : <Text />}
         </View>
 
         <View style={styles.LocationContainer}>
@@ -109,6 +181,7 @@ export default function HomeScreen({ route, navigation }) {
                 longitudeDelta: 0.421
               }}
               zoomControlEnabled
+              resetBoundsOnResize
             >
               {/* {markerLocation.long === 0 && markerLocation.lat === 0
               ? setMarkerLocation({
