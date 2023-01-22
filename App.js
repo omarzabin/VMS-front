@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { View, Text, ActivityIndicator } from "react-native";
 import React, { useContext } from "react";
+// import "expo-dev-client";
 
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -10,6 +11,7 @@ import { tokenAtom, isLoadingAtom, firstTimeAtom } from "./src/store/userStore";
 import AuthStack from "./src/screens/Navigation/AuthStack";
 import AppStack from "./src/screens/Navigation/AppStack";
 import FirstTimeStack from "./src/screens/Navigation/FirstTimeStack";
+import "expo-dev-client";
 
 export default function App() {
   const [token] = useAtom(tokenAtom);

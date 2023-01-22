@@ -1,12 +1,41 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import CustomInput from "../../Components/CustomInput/CustomInput";
+
 import Record from "./Record";
+import { useAtom } from "jotai";
+import { vehicleOwnerAtom } from "../../store/userStore";
+import { recordsApi } from "../../../api/AxiosApi";
+import { useEffect, useState } from "react";
 
 export default function ViewRecords() {
+  const [vehicleOwner] = useAtom(vehicleOwnerAtom);
+
+  const [data, setData] = useState([]);
+
+  const getRepair = async () => {
+    try {
+      const { data } = await recordsApi.getRecord(vehicleOwner.vehicleId);
+      setData(data);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+    }
+  };
+
+  useEffect(() => {
+    getRepair();
+  }, []);
+
   return (
-    <ScrollView style={{ backgroundColor: "#a8cbe6" }}>
-      <Record />
+    <ScrollView>
+      {data.map(item =>
+        <Record
+          part={item.partName}
+          description={item.description}
+          price={item.price}
+          workshop={item.workShop}
+          oilLife={item.oilLife}
+          // repairDate
+        />
+      )}
     </ScrollView>
   );
 }
@@ -30,11 +59,6 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
 
     flexDirection: "row"
-  },
-  icon: {
-    margin: 13,
-    paddingTop: 40,
-    alignSelf: "flex-end"
   },
   rowtitle: {
     flexDirection: "row",

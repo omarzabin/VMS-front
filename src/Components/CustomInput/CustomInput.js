@@ -9,7 +9,8 @@ export default function CustomInput({
   onFocus,
   keyboardType,
   onEndEditing,
-  onSubmitEditing
+  onSubmitEditing,
+  editable
 }) {
   return (
     <View style={styles.container}>
@@ -23,6 +24,7 @@ export default function CustomInput({
         keyboardType={keyboardType}
         onEndEditing={onEndEditing}
         onSubmitEditing={onSubmitEditing}
+        editable={editable}
       />
     </View>
   );

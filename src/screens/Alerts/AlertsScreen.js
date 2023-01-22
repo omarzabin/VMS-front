@@ -7,6 +7,7 @@ import { AlertsApi, vehicleApi } from "../../../api/AxiosApi";
 import { useAtom } from "jotai";
 import { deviceIMEIAtom, vehicleOwnerAtom } from "../../store/userStore";
 import { useNavigation } from "@react-navigation/native";
+import Table from "../../Components/Table/Table";
 export default function AlertsScreen() {
   const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
 
@@ -30,8 +31,6 @@ export default function AlertsScreen() {
       const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
 
       setVehiclePlateNumber(res.data[0].vehiclePlateNumber);
-
-      // console.log("vehicle: ", vehicle);
     } catch (error) {
       console.log("error", JSON.stringify(error));
     }
@@ -81,6 +80,7 @@ export default function AlertsScreen() {
           addressAr={item.addressAr}
           pNumber={vehiclePlateNumber}
           extProp={item.extendedProperties}
+          streetSpeed={item.streetSpeed}
 
           //locationId={item.locationId}
         />

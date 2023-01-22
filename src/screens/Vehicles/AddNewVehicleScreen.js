@@ -51,12 +51,10 @@ export default function AddNewVehiclesScreen() {
         vehicleClassification: checkedRs,
         expiryDate: new Date(expiryDateReg)
       });
-      console.log(regId.data);
       const insId = await insuranceApi.addInsurance({
         insuranceTy: checkedIs,
         expiryDate: new Date(expiryDateIns)
       });
-      console.log(insId.data);
       const vId = await vehicleApi.addVehicle({
         vehicleModel:
           modelOptions[modelOptions.findIndex(obj => obj.key === vehicleModel)]
@@ -74,13 +72,11 @@ export default function AddNewVehiclesScreen() {
         insId: insId.data,
         deviceIMEI: String(deviceIMEI)
       });
-      console.log(vId.data);
-      console.log(vehicleOwner);
       const res = await updateOwnerApi.updateVehicleId(
         vehicleOwner.ownerId,
         vId.data
       );
-      const temp = { ...vehicleOwner, vehicleId: vId };
+      const temp = { ...vehicleOwner, vehicleId: vId.data };
       setVehicleOwner(temp);
       setFirstTime(false);
     } catch (error) {
@@ -129,7 +125,6 @@ export default function AddNewVehiclesScreen() {
       style={{ backgroundColor: "#f0f9ff" }}
       showsVerticalScrollIndicator={false}
     >
-      {console.log("owner", vehicleOwner)}
       <Text
         style={{
           fontSize: 18,
@@ -170,7 +165,6 @@ export default function AddNewVehiclesScreen() {
           </View>
           <View style={styles.innerContainer}>
             <Text style={styles.headerText}>Vehicle Plate Number</Text>
-            {console.log("plate", vehiclePlateNumber)}
             <CustomInput
               placeholder={"xx-xxxxx"}
               value={vehiclePlateNumber}
@@ -273,9 +267,6 @@ export default function AddNewVehiclesScreen() {
                 />
                 <Text style={{ paddingTop: 9 }}>Complementary (تكميلي)</Text>
               </View>
-
-              {console.log(checkedRs)}
-              {console.log(checkedIs)}
             </View>
           </View>
           <View style={styles.innerContainer}>

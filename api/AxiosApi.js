@@ -6,10 +6,6 @@ export const authApi = {
   auth: data => {
     console.log("calling authenticate", data);
     return axios.post("Authentication", data);
-  },
-  getDeviseIMEI: data => {
-    console.log("calling getDeviseIMEI", data.ownerId);
-    return axios.get(`VehicleOwner/getDeviceIMEI?ownerId=${data.ownerId}`);
   }
 };
 export const registerApi = {
@@ -50,6 +46,10 @@ export const vehicleApi = {
   getVehicle: vehicleId => {
     console.log("calling getVehicle", vehicleId);
     return axios.get(`Vehicle/${vehicleId}`);
+  },
+  getDeviseIMEI: data => {
+    console.log("calling getDeviseIMEI", data.ownerId);
+    return axios.get(`Vehicle/getDeviceIMEI?ownerId=${data.ownerId}`);
   }
 };
 
@@ -68,8 +68,18 @@ export const insuranceApi = {
     console.log("calling addInsurance", data);
     return axios.post(`Insurance`, data);
   },
-  getInsurance: regId => {
-    console.log("calling getInsurance", regId);
-    return axios.get(`Insurance/${regId}`);
+  getInsurance: insId => {
+    console.log("calling getInsurance", insId);
+    return axios.get(`Insurance/${insId}`);
+  }
+};
+export const recordsApi = {
+  addRecord: data => {
+    console.log("calling add record", data);
+    return axios.post(`RepairRecords`, data);
+  },
+  getRecord: vehicleId => {
+    console.log("calling get record", vehicleId);
+    return axios.get(`RepairRecords/${vehicleId}`);
   }
 };

@@ -54,7 +54,6 @@ export default function ProfileScreen() {
         ownerId: vehicleOwner.ownerId
       });
       console.warn("first name updated:", firstName);
-      console.log("res: ", res.data);
 
       Alert.alert("Done");
     } catch (error) {
@@ -72,9 +71,7 @@ export default function ProfileScreen() {
       });
       setShowChangePass(false);
       setVehicleOwner({ password: data.NewPassword });
-      console.log("new pass for atom:", vehicleOwner);
       console.warn("first name updated:", firstName);
-      console.log("res: ", res.data);
 
       Alert.alert("Done");
     } catch (error) {
@@ -84,7 +81,6 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {console.log("owner: ", vehicleOwner)}
       <View>
         <Text
           style={{

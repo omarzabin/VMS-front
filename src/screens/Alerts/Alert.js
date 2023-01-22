@@ -17,12 +17,13 @@ export default function Alert({
   pNumber,
   extProp,
   isScrollable = false,
-  locationId
+  locationId,
+  streetSpeed
 }) {
   const navigation = useNavigation();
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
   const [extendedProperty, setExtendedProperty] = useState([]);
-  const { alertTy, setAlertTy } = useState();
+  const [alertTy, setAlertTy] = useState();
   const [vehiclePlateNumber, setVehiclePlateNumber] = useState("");
 
   useEffect(() => {
@@ -38,11 +39,22 @@ export default function Alert({
         })
         .filter(item => item.decoded !== undefined);
       setExtendedProperty(tempArr);
+      if (speed > streetSpeed)
+        setAlertTy(`Over speed !!, street speed is ${streetSpeed}`);
+      else setAlertTy(`No alert`);
     }
   }, []);
 
   return (
-    <View style={temp < 101 ? styles.root : styles.rootRed}>
+    <View
+      style={
+        speed > streetSpeed
+          ? speed > streetSpeed + 1 && speed <= streetSpeed + 9
+            ? styles.rootOrange
+            : styles.rootRed
+          : styles.root
+      }
+    >
       {isScrollable
         ? <ScrollView>
             <View style={styles.body}>
@@ -63,7 +75,9 @@ export default function Alert({
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     Alert
                   </Text>
-                  <Text>high temp</Text>
+                  <Text>
+                    {alertTy}
+                  </Text>
                 </View>
                 <View style={{ flexDirection: "row", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
@@ -98,13 +112,15 @@ export default function Alert({
                     {speed ? speed : "0"}
                   </Text>
                 </View>
-                {/* <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                <View style={{ flexDirection: "row", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
-                    VehicleIGN:
+                    Street Speed:
                   </Text>
-                  {console.log("ign:", vehicleIGN)}
-                  {vehicleIGN ? <Text> On </Text> : <Text> Off</Text>}
-                </View> */}
+                  <Text>
+                    {streetSpeed ? streetSpeed : "0"}
+                  </Text>
+                </View>
+
                 <View style={{ flexDirection: "column", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     AddressAr:
@@ -140,6 +156,7 @@ export default function Alert({
                 long,
                 lat,
                 speed,
+                streetSpeed,
                 vehicleIGN,
                 addressAr,
                 pNumber,
@@ -204,6 +221,7 @@ export default function Alert({
                     {speed ? speed : "0"}
                   </Text>
                 </View>
+
                 <View style={{ flexDirection: "row", marginBottom: 5 }}>
                   <Text style={{ marginRight: 5, fontWeight: "700" }}>
                     VehicleIGN:
@@ -220,7 +238,21 @@ export default function Alert({
                 </View>
                 <View>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("Alert Details")}
+                    onPress={() =>
+                      navigation.navigate("Alert Details", {
+                        time,
+                        temp,
+                        long,
+                        lat,
+                        speed,
+                        vehicleIGN,
+                        addressAr,
+                        pNumber,
+                        extProp,
+                        isScrollable,
+                        locationId,
+                        streetSpeed
+                      })}
                   >
                     <Text
                       style={{
@@ -269,9 +301,7 @@ const valuesDecoder = item => {
     return (temp = item.value);
   } else if (item.decoded === "Total Odometer") return item.value + " km";
   else if (item.decoded === "Battery Level") return item.value + " %";
-  else
-    // else if item.value >=
-    return item.value;
+  else return item.value;
 };
 
 const styles = EStyleSheet.create({
@@ -288,6 +318,15 @@ const styles = EStyleSheet.create({
   rootRed: {
     backgroundColor: "white",
     borderTopColor: "#E53E3E",
+    borderTopWidth: 5,
+    marginHorizontal: "1rem",
+    marginVertical: "0.5rem",
+    borderRadius: 8,
+    padding: "0.7rem"
+  },
+  rootOrange: {
+    backgroundColor: "white",
+    borderTopColor: "#ff9a40",
     borderTopWidth: 5,
     marginHorizontal: "1rem",
     marginVertical: "0.5rem",

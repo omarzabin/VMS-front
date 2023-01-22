@@ -6,7 +6,14 @@ import { useAtom } from "jotai";
 import { alertLocationAtom } from "../../store/userStore";
 import { alertsDecoder } from "../../AlertsKeyValue";
 import { ScrollView } from "react-native-gesture-handler";
-export default function Record() {
+export default function Record({
+  part,
+  description,
+  price,
+  workshop,
+  oilLife,
+  repairDate
+}) {
   return (
     <View style={styles.root}>
       <View style={styles.body}>
@@ -14,42 +21,52 @@ export default function Record() {
           <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }} />
         </View>
         <View style={styles.dataContainer}>
-          <Text style={styles.headerText}>Plate Number</Text>
-          <Text style={styles.address} />
+          <Text style={styles.headerText}>WorkShop</Text>
+          <Text style={styles.address}>
+            {workshop}
+          </Text>
         </View>
-
         <View>
-          <View style={styles.headerWrapper}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Alert</Text>
-            <Text>high temp</Text>
+          {part !== "oil"
+            ? <View style={styles.headerWrapper}>
+                <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                  Part Name:
+                </Text>
+                <Text>
+                  {part}
+                </Text>
+              </View>
+            : <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                <Text style={{ marginRight: 5, fontWeight: "700" }}>
+                  Oil Life:
+                </Text>
+                <Text>
+                  {oilLife}
+                </Text>
+              </View>}
+
+          <View style={{ flexDirection: "row", marginBottom: 5 }}>
+            <Text style={{ marginRight: 5, fontWeight: "700" }}>Price:</Text>
+            <Text>
+              {price}
+            </Text>
           </View>
           <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Temp:</Text>
-            <Text />
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Long:</Text>
-            <Text />
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Lat:</Text>
-            <Text />
+            <Text style={{ marginRight: 5, fontWeight: "700" }}>
+              Repair Date:
+            </Text>
+            <Text>
+              {repairDate}
+            </Text>
           </View>
 
           <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>Speed:</Text>
-            <Text />
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
             <Text style={{ marginRight: 5, fontWeight: "700" }}>
-              VehicleIGN:
+              Description:
             </Text>
-          </View>
-          <View style={{ flexDirection: "column", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>
-              AddressAr:
+            <Text>
+              {description}
             </Text>
-            <Text />
           </View>
         </View>
       </View>
