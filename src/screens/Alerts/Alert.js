@@ -290,13 +290,13 @@ export default function Alert({
 const valuesDecoder = item => {
   if (item.decoded === "Ignition") return item.value ? "On" : "Off";
   else if (item.decoded === "Movement") {
-    return item.value === 0 ? "Idle" : "Moving";
+    return item.value !== 0 ? "Idle" : "Moving";
   } else if (item.decoded === "Towing")
     return item.value === 0 ? "Not being towed" : "Being towed";
   else if (item.decoded === "Unplug")
     return item.value === 0 ? "Device is connected" : "Device is not connected";
   else if (item.decoded === "Sleep Mode")
-    return item.value === 0 ? "Vehicle is moving" : "Vehicle is not moving";
+    return item.value === 0 ? "Vehicle is not moving" : "Vehicle is moving";
   else if (item.decoded === "Engine Oil Temperature") {
     return (temp = item.value);
   } else if (item.decoded === "Total Odometer") return item.value + " km";

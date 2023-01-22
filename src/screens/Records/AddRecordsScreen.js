@@ -39,7 +39,7 @@ export default function AddRecordScreen() {
         Workshop: workshop,
         OilLife: oilLife !== " " ? Number(oilLife) : 0,
         VehicleId: vehicleOwner.vehicleId,
-        RepairDate: new Date(repairDate + 1)
+        RepairDate: new Date(repairDate)
       });
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -85,7 +85,10 @@ export default function AddRecordScreen() {
             : <TextInput
                 style={styles.Part}
                 placeholder={"Oil life in km"}
-                onChangeText={text => setOilLife(Number(text))}
+                onChangeText={text => {
+                  setOilLife(Number(text));
+                  setPart("oil");
+                }}
                 keyboardType={"numeric"}
               />}
           <TextInput

@@ -12,10 +12,16 @@ export default function Record({
   price,
   workshop,
   oilLife,
-  repairDate
+  repairDate,
+  time
 }) {
   return (
     <View style={styles.root}>
+      <View style={{ alignItems: "flex-end" }}>
+        <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }}>
+          {time ? time : ""}
+        </Text>
+      </View>
       <View style={styles.body}>
         <View style={{ alignItems: "flex-end" }}>
           <Text style={{ alignItems: "flex-end", color: "#BEBEBE" }} />
@@ -49,14 +55,6 @@ export default function Record({
             <Text style={{ marginRight: 5, fontWeight: "700" }}>Price:</Text>
             <Text>
               {price}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={{ marginRight: 5, fontWeight: "700" }}>
-              Repair Date:
-            </Text>
-            <Text>
-              {repairDate}
             </Text>
           </View>
 

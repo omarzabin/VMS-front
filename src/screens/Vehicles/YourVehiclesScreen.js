@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { vehicleOwnerAtom } from "../../store/userStore";
@@ -51,6 +51,11 @@ export default function YourVehiclesScreen() {
       style={{ backgroundColor: "#f0f9ff" }}
       showsVerticalScrollIndicator={false}
     >
+      <TouchableOpacity onPress={() => fetchData()}>
+        <View style={{ paddingHorizontal: 15 }}>
+          <Text style={{ textDecorationLine: "underline" }}>refresh</Text>
+        </View>
+      </TouchableOpacity>
       <View>
         <Text style={styles.mainText}>Vehicle Information</Text>
         <View style={styles.outerContends}>

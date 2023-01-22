@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import {
   AlertsApi,
@@ -78,33 +78,26 @@ export default function HomeScreen({ route, navigation }) {
       console.log("error", JSON.stringify(error));
     }
   };
-  useEffect(
-    () => {
-      if (
-        vehicle !== undefined &&
-        alertData !== undefined &&
-        registration !== undefined &&
-        insurance !== undefined
-      ) {
-        fetchData();
-      } else {
-        console.log("vehicle", vehicle);
-        console.log("alert", alertData);
-        console.log("reg: ", registration);
-        console.log("ins: ", insurance);
-        console.log("recourd", recordData);
-      }
-    },
-    []
-    // () => {
-    //   getLatestAlert();
-    // },
-    // []
-  );
+  useEffect(() => {
+    if (
+      vehicle !== undefined &&
+      alertData !== undefined &&
+      registration !== undefined &&
+      insurance !== undefined
+    ) {
+      fetchData();
+    } else {
+    }
+  }, []);
 
   return (
     <ScrollView>
       <View style={styles.outerContainer}>
+        <TouchableOpacity onPress={() => fetchData}>
+          <View style={{ paddingHorizontal: 15 }}>
+            <Text>refresh</Text>
+          </View>
+        </TouchableOpacity>
         <View style={styles.selectListContainer}>
           <SelectList
             setSelected={val => setSelected(val)}

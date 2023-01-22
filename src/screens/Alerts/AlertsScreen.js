@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
 import Alert from "./Alert";
@@ -36,13 +36,6 @@ export default function AlertsScreen() {
     }
   };
 
-  const pull = () => {
-    setRefresh(true);
-    setTimeout(() => {
-      getAlerts();
-      setRefresh(false);
-    }, 2000);
-  };
   useEffect(
     () => {
       geVehicle();
@@ -52,18 +45,17 @@ export default function AlertsScreen() {
   );
 
   return (
-    <ScrollView
-      style={styles.root}
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={refresh}
-          onRefresh={() => {
-            pull();
-          }}
-        />
-      }
-    >
+    <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
+      <TouchableOpacity
+        onPress={() => {
+          geVehicle();
+          getAlerts();
+        }}
+      >
+        <View style={{ paddingHorizontal: 15 }}>
+          <Text style={{ textDecorationLine: "underline" }}>refresh</Text>
+        </View>
+      </TouchableOpacity>
       {data.map(item =>
         <Alert
           temp={100}
@@ -90,4 +82,3 @@ export default function AlertsScreen() {
 }
 
 const styles = EStyleSheet.create({});
-// map, filtring function

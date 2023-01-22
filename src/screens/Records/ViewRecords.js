@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity
+} from "react-native";
 
 import Record from "./Record";
 import { useAtom } from "jotai";
@@ -26,8 +32,14 @@ export default function ViewRecords() {
 
   return (
     <ScrollView>
+      <TouchableOpacity onPress={() => getRepair()}>
+        <View style={{ paddingHorizontal: 15 }}>
+          <Text style={{ textDecorationLine: "underline" }}>refresh</Text>
+        </View>
+      </TouchableOpacity>
       {data.map(item =>
         <Record
+          time={"In: " + item.repairDate.split("T")[0]}
           part={item.partName}
           description={item.description}
           price={item.price}
