@@ -12,10 +12,11 @@ import {
   deviceIMEIAtom
 } from "../../store/userStore";
 import Alert from "../Alerts/Alert";
+import Table from "../../Components/Table/Table";
 export default function HomeScreen({ route, navigation }) {
   const [markerLocation, setMarkerLocation] = useAtom(alertLocationAtom);
   const [vehicleOwner, setVehicleOwner] = useAtom(vehicleOwnerAtom);
-  const [deviceImEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
+  const [deviceIMEI, setDeviceIMEI] = useAtom(deviceIMEIAtom);
 
   const [vehicle, setVehicle] = useState("");
 
@@ -28,7 +29,7 @@ export default function HomeScreen({ route, navigation }) {
 
   const getLatestAlert = async () => {
     try {
-      const { data } = await AlertsApi.getLatest(deviceImEI);
+      const { data } = await AlertsApi.getLatest(deviceIMEI);
       setAlertData(data);
     } catch (error) {
       console.log("error", JSON.stringify(error));
@@ -39,7 +40,6 @@ export default function HomeScreen({ route, navigation }) {
     try {
       const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
       setVehicle(res.data[0]);
-      console.log("vehicle: ", vehicle);
     } catch (error) {
       console.log("error", JSON.stringify(error));
     }
@@ -52,80 +52,92 @@ export default function HomeScreen({ route, navigation }) {
           : geVehicle();
       }
     },
-    [vehicle]
+    [vehicle, markerLocation]
   );
 
   return (
-    <View style={styles.outerContainer}>
-      {console.log("plate", vehicle.vehiclePlateNumber)}
-      <View style={styles.selectListContainer}>
-        <SelectList
-          setSelected={val => setSelected(val)}
-          data={data}
-          save="value"
-          search={false}
-          placeholder="Select Vehicle"
-        />
-      </View>
-      <View style={{ maxHeight: 300 }}>
-        {alertData.map(item =>
-          <Alert
-            temp={100}
-            long={item.longitude}
-            lat={item.latitude}
-            time={
-              "In: " +
-              item.gpsTime.split("T")[0] +
-              " At: " +
-              item.gpsTime.split("T")[1]
-            }
-            speed={item.speed === 0 ? "0" : item.speed}
-            vehicleIGN={item.vehicleIGN}
-            addressAr={item.addressAr}
-            pNumber={vehicle.vehiclePlateNumber}
-            extProp={item.extendedProperties}
-            isScrollable
-            //locationId={item.locationId}
+    <ScrollView>
+      <View style={styles.outerContainer}>
+        <View style={styles.selectListContainer}>
+          <SelectList
+            setSelected={val => setSelected(val)}
+            data={data}
+            save="value"
+            search={false}
+            placeholder="Select Vehicle"
+            defaultOption={selected}
           />
-        )}
-      </View>
+        </View>
+        <View style={{ paddingHorizontal: 13 }}>
+          <Table />
+        </View>
 
-      <View style={styles.LocationContainer}>
-        <View style={styles.mapContainer}>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={
-              styles.map // remove if not using Google Maps
-            }
-            region={{
-              latitude: 31.963158,
-              longitude: 35.930359,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.421
-            }}
-            zoomControlEnabled
-          >
-            {/* {markerLocation.long === 0 && markerLocation.lat === 0
+        <View style={{ maxHeight: 300 }}>
+          {alertData.map(item =>
+            <Alert
+              temp={100}
+              long={item.longitude}
+              lat={item.latitude}
+              time={
+                "In: " +
+                item.gpsTime.split("T")[0] +
+                " At: " +
+                item.gpsTime.split("T")[1]
+              }
+              speed={item.speed}
+              vehicleIGN={item.vehicleIGN}
+              addressAr={item.addressAr}
+              pNumber={vehicle.vehiclePlateNumber}
+              extProp={item.extendedProperties}
+              isScrollable
+              //locationId={item.locationId}
+            />
+          )}
+        </View>
+
+        <View style={styles.LocationContainer}>
+          <View style={styles.mapContainer}>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={
+                styles.map // remove if not using Google Maps
+              }
+              region={{
+                latitude: 31.963158,
+                longitude: 35.930359,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.421
+              }}
+              zoomControlEnabled
+            >
+              {/* {markerLocation.long === 0 && markerLocation.lat === 0
               ? setMarkerLocation({
-                  long: alertData[0].longitude,
-                  lat: alertData[0].latitude
+                  long: alertData.longitude,
+                  lat: alertData.latitude
                 })
               : <Marker
                   coordinate={{
                     latitude: markerLocation.lat,
                     longitude: markerLocation.long
                   }}
-                />} */}
+                />}
             <Marker
               coordinate={{
                 latitude: markerLocation.lat,
                 longitude: markerLocation.long
               }}
-            />
-          </MapView>
+            /> */}
+              <Marker
+                coordinate={{
+                  latitude: markerLocation.lat,
+                  longitude: markerLocation.long
+                }}
+              />
+            </MapView>
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

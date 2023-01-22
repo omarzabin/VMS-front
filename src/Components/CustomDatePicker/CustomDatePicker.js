@@ -22,9 +22,7 @@ const CustomDatePicker = ({ setValue }) => {
       underlayColor="#FFFFF7"
       activeOpacity={0}
       onPress={() => {
-        console.log("open DatePicker");
         setOpen(true);
-        console.log(open);
       }}
     >
       <View>

@@ -19,45 +19,15 @@ export default function YourVehiclesScreen() {
   const [registration, setRegistration] = useState([{}]);
   const [insurance, setInsurance] = useState([{}]);
 
-  const geVehicle = async () => {
-    try {
-      const vehicleRes = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
-    } catch (error) {
-      console.log("error", JSON.stringify(error));
-    }
-  };
-  const getRegistrationLocal = async () => {
-    try {
-      const reg = await VehicleRegistrationApi.getRegistration(vehicle.regId);
-    } catch (error) {}
-  };
-
-  const getInsuranceLocal = async () => {
-    try {
-      const ins = await insuranceApi.getInsurance(vehicle.insId);
-      setInsurance(ins.data);
-      // console.log("reg info:", reg.data);
-    } catch (error) {
-      //console.log("error", JSON.stringify(error));
-    }
-  };
   const fetchData = async () => {
     try {
       const res = await vehicleApi.getVehicle(vehicleOwner.vehicleId);
-      console.log("vehRes: ", res.data[0].regId);
       setVehicle(res.data);
 
       const reg = await VehicleRegistrationApi.getRegistration(
         res.data[0].regId
       );
       const ins = await insuranceApi.getInsurance(res.data[0].insId);
-
-      console.log("vehicle:", res.data);
-
-      console.log("reg:", reg.data);
-
-      console.log("ins:", ins.data);
-
       setRegistration(reg.data);
       setInsurance(ins.data);
     } catch (error) {
@@ -69,9 +39,6 @@ export default function YourVehiclesScreen() {
     () => {
       if (vehicle[0].vehicleId === undefined) {
         fetchData();
-        console.log("vehicle: ", vehicle);
-        console.log("reg: ", registration);
-        console.log("ins: ", insurance);
       } else {
         console.log("first");
       }
@@ -101,7 +68,7 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Model
             </Text>
-            <CustomInput value={vehicle[0].vehicleModel} />
+            <CustomInput value={vehicle[0].vehicleModel} editable={false} />
           </View>
           <View style={styles.innerContends}>
             <Text
@@ -109,7 +76,10 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Manufacture Year
             </Text>
-            <CustomInput value={String(vehicle[0].vehicleManufactureYear)} />
+            <CustomInput
+              value={String(vehicle[0].vehicleManufactureYear)}
+              editable={false}
+            />
           </View>
           <View style={styles.innerContends}>
             <Text
@@ -117,7 +87,10 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Plate Number
             </Text>
-            <CustomInput value={vehicle[0].vehiclePlateNumber} />
+            <CustomInput
+              value={vehicle[0].vehiclePlateNumber}
+              editable={false}
+            />
           </View>
           <View style={styles.innerContends}>
             <Text
@@ -125,7 +98,7 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Color
             </Text>
-            <CustomInput value={vehicle[0].vehicleColor} />
+            <CustomInput value={vehicle[0].vehicleColor} editable={false} />
           </View>
           <View style={styles.innerContends}>
             <Text
@@ -133,7 +106,7 @@ export default function YourVehiclesScreen() {
             >
               Device IMEI
             </Text>
-            <CustomInput value={vehicle[0].deviceIMEI} />
+            <CustomInput value={vehicle[0].deviceIMEI} editable={false} />
           </View>
         </View>
         <Text style={styles.mainText}>Registration Information</Text>
@@ -144,7 +117,10 @@ export default function YourVehiclesScreen() {
             >
               Vehicle Classification
             </Text>
-            <CustomInput value={registration[0].vehicleClassification} />
+            <CustomInput
+              value={registration[0].vehicleClassification}
+              editable={false}
+            />
           </View>
           <View>
             <Text
@@ -152,13 +128,14 @@ export default function YourVehiclesScreen() {
             >
               Expiry Date
             </Text>
-
+            {}
             <CustomInput
               value={
                 registration[0].expiryDate === undefined
                   ? " "
                   : registration[0].expiryDate.split("T")[0]
               }
+              editable={false}
             />
           </View>
         </View>
@@ -171,7 +148,7 @@ export default function YourVehiclesScreen() {
               Insurance Type
             </Text>
 
-            <CustomInput value={insurance[0].insuranceTy} />
+            <CustomInput value={insurance[0].insuranceTy} editable={false} />
           </View>
           <View>
             <Text
@@ -185,6 +162,7 @@ export default function YourVehiclesScreen() {
                   ? " "
                   : insurance[0].expiryDate.split("T")[0]
               }
+              editable={false}
             />
           </View>
         </View>

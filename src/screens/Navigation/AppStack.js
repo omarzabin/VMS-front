@@ -22,6 +22,7 @@ const AppStack = () => {
     <Drawer.Navigator
       initialRouteName="Home"
       drawerContent={props => <DrawerContent {...props} />}
+      unmountOnBlur={true}
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />

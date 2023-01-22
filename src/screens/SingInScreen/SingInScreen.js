@@ -13,7 +13,7 @@ import CustomButton from "../../Components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller, set } from "react-hook-form";
 import { useState } from "react";
-import { authApi } from "../../../api/AxiosApi";
+import { authApi, vehicleApi } from "../../../api/AxiosApi";
 
 import { useAtom } from "jotai";
 import {
@@ -38,17 +38,13 @@ export default function SignInScreen({ navigation }) {
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const signIn = async data => {
-    console.log("first");
     try {
       const owner = await authApi.auth({
         email: data.Email,
         password: data.Password
       });
-      console.log("owner data: ", owner.data);
       setVehicleOwner(owner.data);
-
-      console.log("vehicleOWner :", vehicleOwner);
-      const deviceIMEI = await authApi.getDeviseIMEI({
+      const deviceIMEI = await vehicleApi.getDeviseIMEI({
         ownerId: owner.data.ownerId
       });
       setDeviceIMEI(deviceIMEI.data);

@@ -56,8 +56,6 @@ export default function SignUpScreen() {
         password: data.Password,
         vehicleId: 0
       });
-      console.log("VehicleOwner:", res.data);
-      console.log("owner", vehicleOwner);
     } catch (error) {
       setToken(null);
       setIsLoading(true);
